@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olive — A Journey of Forgiveness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night1:#0f1b2d; --night2:#1d3450; --dawn1:#2a4a6b; --dawn2:#c98e6b;
+  --leaf:#7fb069; --leaf-dark:#4a7c59; --gold:#e8c878; --cream:#f7f3ea;
+  --ink:#22303f; --soft:#9fb4c7; --card:#ffffff;
+  --serif:'Cormorant Garamond',Georgia,serif; --sans:'Nunito Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(160deg,#0c1626,#1b2f47);font-family:var(--sans);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:18px}
+.phone{width:390px;height:780px;max-height:96vh;background:var(--cream);border-radius:40px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 10px #0a121f;touch-action:none}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+#fx{position:absolute;inset:0;z-index:64;pointer-events:none}
+
+/* ---------- shared ---------- */
+h1,h2,h3,.serif{font-family:var(--serif)}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:16px;background:var(--leaf-dark);color:#fff;font-family:var(--sans);font-size:16px;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(74,124,89,.35)}
+.btn.ghost{background:transparent;color:var(--leaf-dark);box-shadow:none;font-weight:400;padding:10px}
+.btn.gold{background:linear-gradient(135deg,#d4a94e,#e8c878);color:#5a4310}
+.tag{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf-dark);font-weight:700}
+input[type=text],textarea{width:100%;padding:14px;border:1.5px solid #ddd3c0;border-radius:14px;background:#fff;font-family:var(--sans);font-size:15px;color:var(--ink);outline:none;resize:none}
+input:focus,textarea:focus{border-color:var(--leaf)}
+.tipsbtn{margin:4px 20px 110px;background:#fffaf0;border:1.5px dashed #ddc98f;color:#9a7b2d;border-radius:16px;padding:14px;font-size:14px;font-weight:600;width:auto;display:block;cursor:pointer;font-family:var(--sans);transition:all .2s;text-align:center}
+.tipsbtn:hover{background:#fdf3da}
+
+/* ---------- onboarding ---------- */
+#onboard{background:linear-gradient(180deg,#13243b 0%,#1d3450 45%,#41617f 80%,#c98e6b 100%);z-index:50;color:#fff}
+.ob-step{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:40px 34px;text-align:center;animation:fadeUp .9s ease}
+.ob-step.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.breath{width:118px;height:118px;margin:0 auto 26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.5),rgba(232,200,120,.18) 60%,transparent 70%);border:1.5px solid rgba(255,255,255,.4);animation:breathe 7s ease-in-out infinite;display:flex;align-items:center;justify-content:center}
+.breath span{font-size:40px;animation:counterBreathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(.82);opacity:.75}50%{transform:scale(1.12);opacity:1}}
+@keyframes counterBreathe{0%,100%{transform:scale(1.1)}50%{transform:scale(.92)}}
+#onboard h1{font-size:40px;font-weight:500;margin-bottom:6px;line-height:1.1}
+.tagline{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--gold);margin-bottom:16px}
+#onboard p.sub{font-size:15px;line-height:1.6;color:#e9e2d2;margin-bottom:26px}
+#onboard input,#onboard textarea{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff;text-align:center}
+#onboard input::placeholder,#onboard textarea::placeholder{color:rgba(255,255,255,.5)}
+.will-opt{display:block;width:100%;margin:8px 0;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;font-size:14.5px;cursor:pointer;text-align:left;transition:all .25s;font-family:var(--sans)}
+.will-opt:hover,.will-opt.sel{background:rgba(232,200,120,.25);border-color:var(--gold)}
+#branch{position:absolute;top:7%;left:6%;width:130px;height:96px;cursor:grab;touch-action:none;z-index:6;animation:branchFloat 6s ease-in-out infinite}
+#branch:active{cursor:grabbing}
+@keyframes branchFloat{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg) translateY(-7px)}}
+.branch-hint{position:absolute;top:calc(7% + 98px);left:6%;font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.08em;z-index:6;pointer-events:none}
+
+/* section chips */
+.chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0}
+.chip{padding:7px 12px;border-radius:20px;border:1.5px solid #ddd3c0;background:#fff;color:#5b6b7a;font-size:12.5px;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.chip.sel{background:var(--leaf-dark);border-color:var(--leaf-dark);color:#fff}
+#onboard .chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff}
+#onboard .chip.sel{background:rgba(232,200,120,.3);border-color:var(--gold)}
+.chip-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:14px}
+
+/* ---------- garden globe ---------- */
+#garden .sky{position:relative;height:100%;background:linear-gradient(180deg,#16283f 0%,#27445f 45%,#3c5a74 70%,#54718a 100%);transition:background 1s}
+#sunset{position:absolute;inset:0;background:linear-gradient(180deg,#2b2438 0%,#6e4660 40%,#c97a4e 70%,#e8a86b 100%);opacity:0;transition:opacity 1.2s;pointer-events:none}
+#gardenSvg{position:absolute;bottom:0;left:0;width:100%;height:80%;cursor:grab}
+#gardenSvg:active{cursor:grabbing}
+.firefly{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px 2px rgba(232,200,120,.7);animation:floaty 9s infinite ease-in-out;pointer-events:none}
+@keyframes floaty{0%,100%{transform:translate(0,0);opacity:.25}25%{transform:translate(14px,-22px);opacity:.95}50%{transform:translate(-10px,-40px);opacity:.5}75%{transform:translate(10px,-16px);opacity:.85}}
+.garden-head{position:absolute;top:0;left:0;right:0;padding:50px 26px 0;color:#fff;z-index:2;text-align:center;pointer-events:none}
+.garden-head h2{font-size:26px;font-weight:500}
+.garden-head p{font-size:12.5px;color:#cfd9d4;margin-top:4px}
+#secLabel{margin-top:8px;display:inline-block;background:rgba(0,0,0,.28);border:1px solid rgba(232,200,120,.4);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--gold);transition:all .3s}
+.tree-g{cursor:pointer}
+.tree-label{font-family:var(--sans);font-size:10.5px;fill:#fdf8ec;text-anchor:middle;letter-spacing:.04em;pointer-events:none}
+.sway{animation:sway 6s ease-in-out infinite;transform-origin:bottom center}
+@keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
+.add-seed{position:absolute;bottom:96px;right:18px;width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3;transition:transform .2s}
+.add-seed:hover{transform:scale(1.08)}
+.tips-bulb{position:absolute;bottom:96px;left:18px;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.35);border:1px solid rgba(232,200,120,.5);font-size:19px;z-index:3;cursor:pointer;transition:transform .2s}
+.tips-bulb:hover{transform:scale(1.1)}
+.sec-jump{position:absolute;bottom:84px;left:70px;right:74px;display:flex;justify-content:center;gap:5px;z-index:3}
+.sec-jump button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);font-size:14px;cursor:pointer;transition:all .25s}
+.sec-jump button.on{background:rgba(232,200,120,.4);border-color:var(--gold);transform:translateY(-3px)}
+#dove{position:absolute;top:20%;left:-14%;font-size:25px;z-index:3;opacity:0;pointer-events:none;transform:scaleX(-1)}
+#dove.fly{animation:flyover 13s linear forwards}
+@keyframes flyover{0%{left:-12%;top:22%;opacity:0}6%{opacity:1}30%{top:15%}60%{top:19%}94%{opacity:1}100%{left:110%;top:13%;opacity:0}}
+
+/* ---------- tree view ---------- */
+#treeView{background:linear-gradient(180deg,#16283f 0%,#2a4a6b 55%,#4a6b7c 100%);color:#fff}
+#treeView.active{animation:zoomIn .55s cubic-bezier(.2,.9,.3,1)}
+@keyframes zoomIn{from{transform:scale(.45);opacity:0;border-radius:50%}to{transform:none;opacity:1}}
+.tv-head{padding:48px 24px 0;text-align:center;z-index:2}
+.tv-head h2{font-size:28px;font-weight:500}
+.tv-head .meta{font-size:12px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.tv-hurt{font-family:var(--serif);font-style:italic;font-size:14.5px;color:#cfd9d4;margin-top:8px;line-height:1.5}
+.tv-trail{margin-top:6px;font-size:15px;letter-spacing:3px}
+#tvSvg{flex:1;width:100%}
+.branch-hot{cursor:pointer}
+#btip{position:absolute;background:rgba(12,22,38,.92);border:1px solid rgba(232,200,120,.5);color:#fff;border-radius:14px;padding:10px 14px;font-size:12.5px;max-width:210px;z-index:48;opacity:0;transition:opacity .25s;pointer-events:none;line-height:1.5}
+#btip b{color:var(--gold);font-family:var(--serif);font-size:16px;display:block;font-style:italic}
+.tv-btns{padding:0 24px 88px}
+.doveLand{animation:doveland 2.4s cubic-bezier(.3,.8,.4,1) both}
+@keyframes doveland{0%{transform:translate(150px,-90px) rotate(-10deg);opacity:0}60%{opacity:1}100%{transform:none;opacity:1}}
+.tv-fruitnote{text-align:center;font-size:11px;color:rgba(255,255,255,.5);padding-bottom:6px}
+
+/* ---------- nav ---------- */
+.nav{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(250,247,238,.96);backdrop-filter:blur(8px);display:flex;border-top:1px solid #e6dec9;z-index:10}
+.nav button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:9.5px;color:#8c9aa8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-bottom:8px}
+.nav button .ico{font-size:20px;filter:grayscale(.7);opacity:.65;transition:all .25s}
+.nav button.on{color:var(--leaf-dark);font-weight:700}
+.nav button.on .ico{filter:none;opacity:1;transform:translateY(-2px)}
+
+/* ---------- path ---------- */
+.head{padding:50px 24px 18px;background:linear-gradient(180deg,#1d3450,#2a4a6b);color:#fff;position:relative}
+.head h2{font-size:25px;font-weight:500}
+.head p{font-size:13px;color:#b9c8d8;margin-top:4px}
+#miniTree{position:absolute;right:18px;top:44px;width:74px;height:96px}
+.feel-trail{margin-top:8px;font-size:16px;letter-spacing:4px}
+.checkin-chip{display:inline-block;margin-top:10px;background:rgba(232,200,120,.18);border:1px solid rgba(232,200,120,.5);color:var(--gold);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;transition:all .2s}
+.checkin-chip:hover{background:rgba(232,200,120,.32)}
+.steps{padding:20px 20px 0}
+.step{background:var(--card);border-radius:18px;padding:17px 18px;margin-bottom:13px;display:flex;gap:14px;align-items:flex-start;box-shadow:0 2px 10px rgba(40,60,80,.07);cursor:pointer;transition:transform .2s;border:1.5px solid transparent}
+.step:hover{transform:translateX(3px)}
+.step.done{border-color:#cfe3c4;background:#f4f9f0}
+.step.locked{opacity:.45;cursor:default}
+.step .dot{width:34px;height:34px;min-width:34px;border-radius:50%;background:#eef0e9;display:flex;align-items:center;justify-content:center;font-size:16px}
+.step.done .dot{background:var(--leaf);color:#fff}
+.step h4{font-size:15px;color:var(--ink);font-family:var(--sans);font-weight:700}
+.step p{font-size:12.5px;color:#7d8a98;margin-top:3px;line-height:1.5}
+.optional{font-size:10px;background:#f3e8cf;color:#9a7b2d;border-radius:8px;padding:2px 8px;margin-left:6px;font-weight:700;letter-spacing:.05em}
+.willbar{display:flex;gap:6px;margin:10px 0 0;max-width:200px}
+.willbar div{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.18)}
+.willbar div.f{background:linear-gradient(90deg,var(--leaf),var(--gold))}
+
+/* ---------- list ---------- */
+.quickadd{margin:18px 20px 8px;background:var(--card);border-radius:18px;padding:16px;box-shadow:0 2px 10px rgba(40,60,80,.07)}
+.quickadd input{margin-bottom:4px}
+.lrow{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:13px 16px;margin:0 20px 10px;box-shadow:0 2px 8px rgba(40,60,80,.06);cursor:pointer;transition:transform .2s}
+.lrow:hover{transform:translateX(3px)}
+.lrow .stg{font-size:22px;min-width:28px;text-align:center}
+.lrow h5{font-size:14.5px;color:var(--ink)}
+.lrow p{font-size:11.5px;color:#92a0ad;margin-top:2px}
+.lrow .hurtline{font-style:italic;color:#a89f8d;font-family:var(--serif);font-size:12px}
+.lrow .fe{margin-left:auto;font-size:18px}
+
+/* ---------- modal / exercise ---------- */
+.modal{position:absolute;inset:0;background:rgba(18,30,46,.55);backdrop-filter:blur(3px);display:none;align-items:flex-end;z-index:40}
+.modal.open{display:flex}
+.sheet{background:var(--cream);width:100%;max-height:88%;border-radius:30px 30px 0 0;padding:28px 26px 34px;overflow-y:auto;animation:slideUp .45s cubic-bezier(.2,.9,.3,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+.sheet h3{font-size:24px;color:var(--ink);margin-bottom:8px;font-weight:600}
+.sheet p{font-size:14px;line-height:1.7;color:#5b6b7a;margin-bottom:14px}
+.sheet .quote{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--leaf-dark);border-left:3px solid var(--gold);padding-left:14px;margin:16px 0}
+.feel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.feel{padding:11px 12px;border-radius:13px;border:1.5px solid #ddd3c0;background:#fff;color:#5b6b7a;font-size:13px;cursor:pointer;font-family:var(--sans);text-align:left;transition:all .2s}
+.feel.sel{background:#eef6e8;border-color:var(--leaf);color:var(--leaf-dark);font-weight:700}
+
+/* ---------- unlock ---------- */
+#unlock{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,#2e547a,#13243b 75%);z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;color:#fff}
+#unlock.open{display:flex}
+.bloom{font-size:64px;animation:bloomIn 1.6s cubic-bezier(.2,1.2,.3,1) both}
+@keyframes bloomIn{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.25) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+#unlock .qcard{margin-top:26px;background:rgba(255,255,255,.09);border:1px solid rgba(232,200,120,.45);border-radius:22px;padding:26px 22px;animation:fadeUp 1.2s .5s both}
+#unlock .qcard .q{font-family:var(--serif);font-size:21px;line-height:1.5;font-style:italic}
+#unlock .qcard .a{margin-top:12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.petal{position:absolute;font-size:16px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(820px) rotate(360deg);opacity:0}}
+
+/* ---------- vault ---------- */
+.vault-grid{padding:18px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.vcard{border-radius:18px;padding:18px 15px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.vcard.un{background:linear-gradient(150deg,#2a4a6b,#1d3450);color:#fff;cursor:pointer;transition:transform .25s}
+.vcard.un:hover{transform:translateY(-4px)}
+.vcard.lk{background:#ece6d7;color:#b4ab97;display:flex;align-items:center;justify-content:center;font-size:24px}
+.vcard .q{font-family:var(--serif);font-style:italic;font-size:13.5px;line-height:1.45}
+.vcard .a{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:10px}
+.vcard .share{position:absolute;top:8px;right:10px;font-size:13px;opacity:.7}
+
+/* ---------- stories ---------- */
+.story{background:var(--card);border-radius:20px;margin:0 20px 16px;overflow:hidden;box-shadow:0 2px 12px rgba(40,60,80,.08)}
+.story .band{height:7px;background:linear-gradient(90deg,var(--leaf),var(--gold))}
+.story .body{padding:18px 19px}
+.story h4{font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:600}
+.story .meta{font-size:11px;color:#98a5b2;margin:4px 0 10px;letter-spacing:.06em;text-transform:uppercase}
+.story p{font-size:13.5px;line-height:1.65;color:#5b6b7a}
+.story.lockedS{opacity:.65;background:#efe9da}
+.story.lockedS .band{background:#cfc6ae}
+.two-voices{display:flex;gap:10px;margin-top:12px}
+.voice{flex:1;background:#f6f3ea;border-radius:12px;padding:11px;font-size:12px;line-height:1.55;color:#5b6b7a}
+.voice b{color:var(--leaf-dark);display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+
+/* ---------- tips ---------- */
+.tip-card{background:var(--card);border-radius:18px;margin:0 20px 14px;padding:18px 19px;box-shadow:0 2px 10px rgba(40,60,80,.07);border-left:4px solid var(--gold)}
+.tip-card h4{font-family:var(--serif);font-size:19px;color:var(--ink);font-weight:600;margin-bottom:6px}
+.tip-card p{font-size:13.5px;line-height:1.65;color:#5b6b7a}
+.backchip{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;margin-bottom:8px}
+
+/* ---------- together ---------- */
+.companion{display:flex;align-items:center;gap:13px;background:var(--card);border-radius:16px;padding:14px 16px;margin:0 20px 11px;box-shadow:0 2px 8px rgba(40,60,80,.06)}
+.avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;background:linear-gradient(135deg,#7fb069,#4a7c59);color:#fff;font-weight:700;font-family:var(--sans)}
+.companion h5{font-size:14.5px;color:var(--ink)}
+.companion p{font-size:11.5px;color:#92a0ad;margin-top:2px}
+.lvl2{margin:18px 20px 16px;border:1.5px dashed #cdbd96;border-radius:20px;padding:22px;text-align:center;background:#f5efdf}
+.lvl2 h4{font-family:var(--serif);font-size:20px;color:#8a6d2c}
+.lvl2 p{font-size:13px;color:#9c8a5e;line-height:1.6;margin:8px 0 0}
+.prayer-nudge{margin:14px 0;background:linear-gradient(135deg,#fdf6e3,#f7ecd2);border:1px solid #ecd9a8;border-radius:16px;padding:15px 16px}
+.prayer-nudge h5{font-size:13px;color:#9a7b2d;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.prayer-nudge p{font-size:14px !important;color:#7a6633 !important;font-style:italic;font-family:var(--serif)}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+
+  <!-- ================= ONBOARDING ================= -->
+  <div class="screen active" id="onboard">
+    <div class="ob-step active" data-ob="0">
+      <div id="branch">
+        <svg viewBox="0 0 130 96" width="100%" height="100%">
+          <path d="M10,86 Q45,62 75,44 Q100,30 122,12" stroke="#7a8c4f" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <ellipse cx="30" cy="68" rx="14" ry="5.5" fill="#8aa05c" transform="rotate(-32 30 68)"/>
+          <ellipse cx="52" cy="55" rx="14" ry="5.5" fill="#76944e" transform="rotate(-28 52 55)"/>
+          <ellipse cx="72" cy="42" rx="14" ry="5.5" fill="#8aa05c" transform="rotate(-30 72 42)"/>
+          <ellipse cx="93" cy="29" rx="13" ry="5" fill="#76944e" transform="rotate(-32 93 29)"/>
+          <ellipse cx="111" cy="18" rx="12" ry="4.5" fill="#8aa05c" transform="rotate(-35 111 18)"/>
+          <circle cx="44" cy="70" r="6" fill="#5c6b35"/>
+          <circle cx="66" cy="56" r="6" fill="#46552a"/>
+          <circle cx="88" cy="42" r="5.5" fill="#5c6b35"/>
+        </svg>
+      </div>
+      <div class="branch-hint">drag me ↷</div>
+      <div class="breath"><span>🕊️</span></div>
+      <h1>Olive</h1>
+      <div class="tagline">"Extend the olive branch."</div>
+      <p class="sub">You don't have to be ready to forgive.<br>You only have to be willing to begin.<br><br>Breathe with the circle for a moment.</p>
+      <button class="btn gold" onclick="ob(1)">Begin my journey</button>
+      <button class="btn ghost" style="color:#cfd9d4" onclick="ob(1)">I'm just here to learn</button>
+    </div>
+
+    <div class="ob-step" data-ob="1">
+      <h1 style="font-size:30px">Name one person<br><span style="font-size:19px;color:#cfd9d4">— or one situation —</span></h1>
+      <p class="sub" style="margin-bottom:14px">Someone whose memory still carries weight. Just a first name, initials, or even "my old boss." This stays completely private.</p>
+      <input type="text" id="obName" placeholder="A name, or initials…" maxlength="30">
+      <div class="chip-label">Then choose where this story lives in your garden — pick the closest fit; you can always replant later:</div>
+      <div class="chips" id="obChips"></div>
+      <button class="btn gold" onclick="ob(2)">Continue</button>
+      <button class="btn ghost" style="color:#cfd9d4" onclick="ob(2)">Skip for now</button>
+    </div>
+
+    <div class="ob-step" data-ob="2">
+      <h1 style="font-size:30px">Name the hurt</h1>
+      <p class="sub">One sentence is enough. Naming it is the first act of taking your power back. It will be kept beside their tree, so you never have to carry it in your head again.</p>
+      <textarea id="obHurt" rows="3" placeholder="What happened, in your own words…"></textarea>
+      <div style="height:18px"></div>
+      <button class="btn gold" onclick="ob(3)">Continue</button>
+      <button class="btn ghost" style="color:#cfd9d4" onclick="ob(3)">Not yet — that's okay</button>
+    </div>
+
+    <div class="ob-step" data-ob="3">
+      <h1 style="font-size:28px">Where is your heart today?</h1>
+      <p class="sub" style="margin-bottom:16px">There is no wrong answer. Every one of these is a beginning.</p>
+      <button class="will-opt" onclick="setWill(this,1)">🌑 &nbsp;I'm not ready — I just want to learn</button>
+      <button class="will-opt" onclick="setWill(this,2)">🌒 &nbsp;I'm willing to consider it someday</button>
+      <button class="will-opt" onclick="setWill(this,3)">🌓 &nbsp;I'm willing to become willing</button>
+      <button class="will-opt" onclick="setWill(this,4)">🌔 &nbsp;I'm ready to take a first step</button>
+      <button class="will-opt" onclick="setWill(this,5)">🌕 &nbsp;I'm ready to forgive fully</button>
+      <div style="height:14px"></div>
+      <button class="btn gold" onclick="finishOb()">Plant my first seed</button>
+    </div>
+  </div>
+
+  <!-- ================= GARDEN ================= -->
+  <div class="screen" id="garden">
+    <div class="sky">
+      <div id="sunset"></div>
+      <div id="dove">🕊️</div>
+      <div class="garden-head">
+        <h2 class="serif">Your Garden</h2>
+        <p>Drag the globe to wander. Tap a tree to visit it.</p>
+        <div id="secLabel">🏡 Family</div>
+      </div>
+      <svg id="gardenSvg" viewBox="0 0 390 608" preserveAspectRatio="xMidYMax slice"></svg>
+      <div class="sec-jump" id="secJump"></div>
+      <button class="tips-bulb" onclick="show('tips')" title="Tips">💡</button>
+      <button class="add-seed" onclick="openModal('mAdd')" title="Plant a new seed">＋</button>
+    </div>
+  </div>
+
+  <!-- ================= TREE VIEW (zoom) ================= -->
+  <div class="screen" id="treeView">
+    <div class="tv-head">
+      <span class="backchip" onclick="show('garden')">← Garden</span>
+      <h2 class="serif" id="tvName">—</h2>
+      <div class="meta" id="tvMeta"></div>
+      <div class="tv-hurt" id="tvHurt"></div>
+      <div class="tv-trail" id="tvTrail"></div>
+    </div>
+    <svg id="tvSvg" viewBox="-150 -252 300 296"></svg>
+    <div class="tv-fruitnote">Hover or tap the branches and fruit 🫒</div>
+    <div class="tv-btns">
+      <button class="btn gold" onclick="openPerson(cur)">Tend this tree →</button>
+    </div>
+  </div>
+
+  <!-- ================= PATH ================= -->
+  <div class="screen" id="path">
+    <div class="head">
+      <span class="tag" style="color:var(--gold)" id="pathStage">SEED · STAGE 1 OF 4</span>
+      <h2 class="serif" id="pathName">—</h2>
+      <p id="pathSub">Small steps. Each one is a victory.</p>
+      <div class="feel-trail" id="feelTrail"></div>
+      <div class="willbar" id="willbar"></div>
+      <span class="checkin-chip" onclick="openCheckin(null)">🔔 Weekly check-in · How do I feel today?</span>
+      <svg id="miniTree" viewBox="-45 -110 90 130"></svg>
+    </div>
+    <div class="scroll"><div class="steps" id="stepList"></div>
+      <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
+    </div>
+  </div>
+
+  <!-- ================= LIST ================= -->
+  <div class="screen" id="list">
+    <div class="head"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p></div>
+    <div class="scroll">
+      <div class="quickadd">
+        <input type="text" id="qaName" placeholder="Add a name…" maxlength="30" onkeydown="if(event.key==='Enter')quickAdd()">
+        <div class="chips" id="qaChips" style="justify-content:flex-start"></div>
+        <button class="btn" style="padding:11px" onclick="quickAdd()">Plant in my garden 🌱</button>
+      </div>
+      <p style="text-align:center;font-size:11.5px;color:#98a5b2;margin:6px 0 14px">Add names as they come to you — you can begin their path anytime.<br>We'll gently remind you each week to check in on how you feel.</p>
+      <div id="listRows"></div>
+      <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
+    </div>
+  </div>
+
+  <!-- ================= STORIES ================= -->
+  <div class="screen" id="stories">
+    <div class="head"><h2 class="serif">Stories of Forgiveness</h2><p>Real journeys, and how the world forgives. More unlock as you grow.</p></div>
+    <div class="scroll" style="padding:18px 0 0">
+      <div class="story">
+        <div class="band"></div>
+        <div class="body">
+          <h4>"Twelve years of silence, ended by a letter"</h4>
+          <div class="meta">Healed relationship · Two voices</div>
+          <p>A father and daughter who hadn't spoken since her wedding. She wrote the letter inside Olive — and then chose to send it.</p>
+          <div class="two-voices">
+            <div class="voice"><b>Sarah</b>"I wrote it never planning to send it. Sealing it was supposed to be the end. But the weight lifted, and I realized I wanted him back more than I wanted to be right."</div>
+            <div class="voice"><b>Her father</b>"I read it four times in the driveway. I'd rehearsed my defense for twelve years and never once rehearsed an apology. I sent one back in an hour."</div>
+          </div>
+        </div>
+      </div>
+      <div class="story">
+        <div class="band" style="background:linear-gradient(90deg,#5d8aa8,#c98e6b)"></div>
+        <div class="body">
+          <h4>Hoʻoponopono — Hawaii</h4>
+          <div class="meta">How the world forgives</div>
+          <p>An ancient Hawaiian practice of reconciliation built on four phrases said until they become true: <i>"I'm sorry. Please forgive me. Thank you. I love you."</i> Families would not sleep until the tangled net of resentment — <i>hihia</i> — was unwound.</p>
+        </div>
+      </div>
+      <div class="story">
+        <div class="band" style="background:linear-gradient(90deg,#b06a4f,#e8c878)"></div>
+        <div class="body">
+          <h4>Ubuntu &amp; the Truth Commission — South Africa</h4>
+          <div class="meta">How the world forgives</div>
+          <p>"A person is a person through other persons." After apartheid, victims sat across from those who harmed them — not for punishment, but for truth. Many found that hearing the full story was the door forgiveness walked through.</p>
+        </div>
+      </div>
+      <div class="story">
+        <div class="band" style="background:linear-gradient(90deg,#4a7c59,#9fb4c7)"></div>
+        <div class="body">
+          <h4>The Amish of Nickel Mines</h4>
+          <div class="meta">How the world forgives</div>
+          <p>Hours after an unthinkable school tragedy in 2006, Amish families visited the shooter's widow to comfort <i>her</i>. They later attended his funeral. Asked how, an elder said: "Forgiveness is a decision first. The feelings follow — sometimes years behind."</p>
+        </div>
+      </div>
+      <div class="story lockedS"><div class="band"></div><div class="body">
+        <h4>🔒 The brother who came home</h4>
+        <div class="meta">Unlocks when your first tree becomes a sprout</div>
+        <p>A story about the welcome that waits on the other side of pride.</p>
+      </div></div>
+      <div class="story lockedS"><div class="band"></div><div class="body">
+        <h4>🔒 The hand she shook</h4>
+        <div class="meta">Unlocks at your first sapling</div>
+        <p>A survivor meets her captor decades later — and learns forgiveness is a power, not a surrender.</p>
+      </div></div>
+      <div class="story lockedS"><div class="band"></div><div class="body">
+        <h4>🔒 Two mothers, one table</h4>
+        <div class="meta">Unlocks at your first bloom</div>
+        <p>The mother of a victim and the mother of the one responsible, and the meal that changed both families.</p>
+      </div></div>
+      <div class="story lockedS"><div class="band"></div><div class="body">
+        <h4>🔒 Your story</h4>
+        <div class="meta">Unlocks when a relationship heals</div>
+        <p>When you and someone you've forgiven are both ready, you can tell it here — in two voices.</p>
+      </div></div>
+      <div style="margin:8px 20px 0"><button class="btn ghost">Share your story when you're ready →</button></div>
+      <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
+    </div>
+  </div>
+
+  <!-- ================= VAULT ================= -->
+  <div class="screen" id="vault">
+    <div class="head"><h2 class="serif">Wisdom Vault</h2><p id="vaultCount">Thoughts unlock as you take each step.</p></div>
+    <div class="scroll"><div class="vault-grid" id="vaultGrid"></div>
+      <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
+    </div>
+  </div>
+
+  <!-- ================= TIPS ================= -->
+  <div class="screen" id="tips">
+    <div class="head">
+      <span class="backchip" onclick="show(lastScreen)">← Back</span>
+      <h2 class="serif">Tips &amp; Perspectives</h2><p>New ways to hold an old hurt. Take what helps, leave the rest.</p>
+    </div>
+    <div class="scroll" style="padding:18px 0 100px">
+      <div class="tip-card"><h4>Hurt people hurt people</h4><p>Almost no one wakes up wanting to wound you. Most are passing on a pain they never healed. Seeing their wound doesn't excuse them — it shrinks them from monster back to human, and humans are forgivable.</p></div>
+      <div class="tip-card"><h4>The second arrow</h4><p>An old Buddhist teaching: the first arrow is what they did to you. The second arrow is the one you fire into the same wound every time you replay it. Forgiveness doesn't undo the first arrow. It puts down the bow.</p></div>
+      <div class="tip-card"><h4>Picture them at seven years old</h4><p>Before they hurt you, they were a child who was learning what love looked like — maybe badly. When forgiving feels impossible, try forgiving the seven-year-old they once were, and work forward from there.</p></div>
+      <div class="tip-card"><h4>Forgiveness is a door you open for yourself</h4><p>They may never know you forgave them. They may never deserve it. That's fine — they were never the point. Resentment charges you rent for a house someone else lives in.</p></div>
+      <div class="tip-card"><h4>The REACH method</h4><p>Psychologist Everett Worthington's five steps: <b>R</b>ecall the hurt honestly. <b>E</b>mpathize with the one who caused it. Give the <b>A</b>ltruistic gift of forgiveness. <b>C</b>ommit to it in writing. <b>H</b>old on when doubt returns. Olive's path walks you through all five.</p></div>
+      <div class="tip-card"><h4>Seventy times seven</h4><p>When asked how many times to forgive, Jesus answered "seventy times seven" — not as math, but as a way of saying: stop counting. Forgiveness is rarely one moment. It's a practice, like watering a tree.</p></div>
+      <div class="tip-card"><h4>The empty chair</h4><p>Set an empty chair across from you and say out loud what you'd say if they were in it — the anger, the questions, all of it. You'll often find that what you needed wasn't their apology. It was your own voice.</p></div>
+      <div class="tip-card"><h4>Drop the rope</h4><p>A grudge is a tug-of-war with the past. You can't win it — the past never lets go of its end. But you can drop the rope. The moment you do, the war is over, whether or not the other side ever knows.</p></div>
+    </div>
+  </div>
+
+  <!-- ================= TOGETHER ================= -->
+  <div class="screen" id="together">
+    <div class="head"><h2 class="serif">Walking Together</h2><p>Growth shared is growth doubled.</p></div>
+    <div class="scroll" style="padding:18px 0 0">
+      <div class="companion"><div class="avatar">M</div><div><h5>Maya</h5><p>Walking with you · 6 days · just unlocked "The Letter"</p></div></div>
+      <div class="companion"><div class="avatar" style="background:linear-gradient(135deg,#c98e6b,#a96a48)">J</div><div><h5>James</h5><p>Invited you to witness his milestone 🌸</p></div></div>
+      <div style="margin:16px 20px">
+        <button class="btn" onclick="openModal('mInvite')">💌 &nbsp;Invite someone to walk with me</button>
+        <p style="text-align:center;font-size:11.5px;color:#98a5b2;margin-top:9px">They'll see only what you choose to share. Your hurts stay yours.</p>
+      </div>
+      <div class="lvl2">
+        <div style="font-size:26px">🔒</div>
+        <h4>Level 2 · The Second List</h4>
+        <p>When your garden is in bloom, a deeper door opens: the people <i>you</i> have hurt, the lessons learned, and the courage to ask forgiveness — from them, from God, or from yourself.</p>
+      </div>
+      <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
+    </div>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+  <div class="modal" id="mAdd"><div class="sheet">
+    <h3 class="serif">Plant a new seed</h3>
+    <p>Add someone to your garden. They never know they're here — this garden is yours alone. Choose the part of the garden where their story lives.</p>
+    <input type="text" id="addName" placeholder="A name, or initials…" maxlength="30">
+    <div class="chips" id="addChips" style="justify-content:flex-start"></div>
+    <button class="btn" onclick="addPerson()">Plant the seed 🌱</button>
+    <button class="btn ghost" onclick="closeModals()">Not now</button>
+  </div></div>
+
+  <div class="modal" id="mEx"><div class="sheet" id="exBody"></div></div>
+  <div class="modal" id="mCheck"><div class="sheet" id="checkBody"></div></div>
+
+  <div class="modal" id="mInvite"><div class="sheet">
+    <h3 class="serif">Walk with me</h3>
+    <p>Just as friendships once spread one email at a time, forgiveness spreads one invitation at a time. Your friend receives a personal note — not spam, a hand extended.</p>
+    <div class="quote" style="font-family:var(--serif);font-style:italic;color:var(--leaf-dark);border-left:3px solid var(--gold);padding-left:14px;margin:16px 0;font-size:17px">"I've started a journey of forgiveness, and it's changing me. I'd be honored if you walked part of it with me."</div>
+    <input type="text" placeholder="Friend's email or phone…">
+    <div style="height:12px"></div>
+    <button class="btn gold" onclick="closeModals();toast('Invitation sent 💌')">Send invitation</button>
+    <button class="btn ghost" onclick="closeModals()">Cancel</button>
+  </div></div>
+
+  <!-- ================= UNLOCK ================= -->
+  <div id="unlock">
+    <div class="bloom" id="unlockEmoji">🌸</div>
+    <h2 class="serif" style="font-size:26px;margin-top:14px" id="unlockTitle">A step taken. A thought unlocked.</h2>
+    <div class="qcard">
+      <div class="q" id="unlockQuote"></div>
+      <div class="a" id="unlockAuthor"></div>
+    </div>
+    <div style="height:26px"></div>
+    <button class="btn gold" style="max-width:240px" onclick="closeUnlock()">Add to my vault ✨</button>
+    <button class="btn ghost" style="color:#cfd9d4;max-width:240px" onclick="closeUnlock()">Share this moment</button>
+  </div>
+
+  <!-- ================= NAV ================= -->
+  <div class="nav" id="mainNav" style="display:none">
+    <button data-nav="garden" class="on"><span class="ico">🌿</span>Garden</button>
+    <button data-nav="path"><span class="ico">🪜</span>Path</button>
+    <button data-nav="list"><span class="ico">📜</span>List</button>
+    <button data-nav="stories"><span class="ico">📖</span>Stories</button>
+    <button data-nav="vault"><span class="ico">✨</span>Vault</button>
+    <button data-nav="together"><span class="ico">🤝</span>Together</button>
+  </div>
+
+  <div id="btip"></div>
+  <canvas id="fx" width="390" height="780"></canvas>
+  <div id="toast" style="position:absolute;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#22303f;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;opacity:0;transition:all .4s;z-index:70;pointer-events:none;white-space:nowrap">.</div>
+</div>
+
+<script>
+/* ============ data ============ */
+const SECTIONS=[
+ {n:"Family",e:"🏡",g:"#4f7a4f",d:"a hearth that never goes cold"},
+ {n:"Friends",e:"⛲",g:"#54855f",d:"a fountain in the square"},
+ {n:"Work",e:"🏮",g:"#46705e",d:"a lamplit bench"},
+ {n:"Life",e:"🪨",g:"#507a49",d:"a stone walkway"},
+ {n:"Faith",e:"🕯️",g:"#5d6f8a",d:"a quiet chapel garden"},
+ {n:"School",e:"🔔",g:"#5e8254",d:"an old bell and bookshelf"},
+ {n:"Love",e:"❤️",g:"#7a5a62",d:"an arch of climbing roses"},
+ {n:"Loss",e:"🌅",g:"#8a6a4f",d:"where the sun sets gently"}
+];
+const FEELINGS=[
+ ["😡","Still furious",1],["⚔️","Vengeful",1],["💔","Deeply hurt",2],["🌫️","Numb",2],
+ ["🌤️","I just want to feel better",3],["🤲","Willing to consider it",3],
+ ["🌱","Willing to forgive",4],["🕊️","Ready to forgive",5],["☀️","At peace",5]
+];
+const FRUITS=["Peace","Patience","Kindness","Gentleness","Self-control","Faithfulness","Joy"];
+const QUOTES=[
+ ["The weak can never forgive. Forgiveness is the attribute of the strong.","Mahatma Gandhi"],
+ ["To forgive is to set a prisoner free and discover that the prisoner was you.","Lewis B. Smedes"],
+ ["Forgiveness does not change the past, but it does enlarge the future.","Paul Boese"],
+ ["Forgiveness is not an occasional act; it is a constant attitude.","Martin Luther King Jr."],
+ ["Unless you let go, unless you forgive yourself, unless you forgive the situation, you cannot move forward.","Steve Maraboli"],
+ ["Forgive, and you will be forgiven.","Luke 6:37"],
+ ["Holding on to anger is like grasping a hot coal with the intent of throwing it at someone else; you are the one who gets burned.","Attributed to the Buddha"],
+ ["Forgiveness is the fragrance that the violet sheds on the heel that has crushed it.","Mark Twain"],
+ ["It takes a strong person to say sorry, and an even stronger person to forgive.","Yolanda Hadid"],
+ ["Always forgive your enemies; nothing annoys them so much.","Oscar Wilde"]
+];
+const STEPS=[
+ {icon:"📖",t:"Learn: what forgiveness is — and isn't",d:"3 minutes. Forgiveness is not excusing, forgetting, or letting them back in. It's setting yourself free.",ex:"learn"},
+ {icon:"✍️",t:"Name it — and how it feels",d:"Write what happened, and choose the feelings that are true today. You'll track how they soften over time.",ex:"name"},
+ {icon:"💌",t:"Write the letter you'll never send",d:"Say everything. Then seal it. Sending is never required — release is the point.",ex:"letter"},
+ {icon:"🕯️",t:"The blessing visualization",d:"Picture them across a safe distance. You don't need them in the room to send peace toward them.",ex:"bless"},
+ {icon:"🙏",t:"A simple prayer",d:"A gentle stretch outside the comfort zone. One sentence, to God, a higher power, or the silence — whatever that means to you.",ex:"pray",opt:true},
+ {icon:"🌸",t:"The release",d:"A short ceremony. Speak the words, let the tree bloom, and feel what lifts.",ex:"release"}
+];
+function mk(name,section,stage,done,log,hurt){return {name,section,stage,will:log.length?FEELINGS[log[log.length-1].f][2]:2,done,log,hurt:hurt||""}}
+let people=[
+ /* Family */
+ mk("Mom",0,1,[],[]),
+ mk("Dad",0,3,[0,1,2],[{f:3,note:""},{f:5,note:""}],"He missed the moments that mattered most."),
+ mk("Brother",0,1,[],[]),
+ mk("Sister",0,1,[],[]),
+ mk("Cousin",0,1,[],[]),
+ mk("Uncle",0,1,[],[]),
+ mk("Aunt",0,1,[],[]),
+ /* Friends */
+ mk("Maya",1,2,[0],[{f:4,note:""}]),
+ mk("Old roommate",1,1,[],[]),
+ mk("J.T.",1,1,[],[]),
+ /* Work */
+ mk("M.K.",2,1,[],[{f:0,note:""}],"Took credit for two years of my work."),
+ mk("The boss",2,1,[],[]),
+ mk("HR",2,1,[],[]),
+ /* Life */
+ mk("The neighbor",3,1,[],[]),
+ mk("The stranger",3,2,[0],[{f:2,note:""}]),
+ mk("Myself",3,1,[],[]),
+ /* Faith */
+ mk("Pastor R.",4,1,[],[]),
+ mk("The church",4,1,[],[]),
+ mk("Youth leader",4,1,[],[]),
+ /* School */
+ mk("The bully",5,2,[0],[{f:2,note:""}]),
+ mk("Coach",5,1,[],[]),
+ mk("Mrs. T.",5,1,[],[]),
+ /* Love */
+ mk("Em",6,2,[0],[{f:2,note:""}],"Left without a word."),
+ mk("First love",6,1,[],[]),
+ mk("The ex",6,1,[],[]),
+ /* Loss */
+ mk("Grandpa",7,4,[0,1,2,3,5],[{f:3,note:""},{f:6,note:""},{f:8,note:""}],"He was gone before I could say goodbye."),
+ mk("The doctors",7,1,[],[]),
+ mk("Goodbye unsaid",7,1,[],[])
+];
+let cur=1, willSel=3, unlocked=[0,1,2], pending=null, checkSel=null, lastScreen='garden';
+let obSection=0, addSection=0, qaSection=0;
+
+/* ============ section chips ============ */
+function chipRow(elId,onPick,getSel){
+  document.getElementById(elId).innerHTML=SECTIONS.map((s,i)=>
+   `<button class="chip ${getSel()===i?'sel':''}" onclick="${onPick}(${i})">${s.e} ${s.n}</button>`).join("");
+}
+function pickOb(i){obSection=i;chipRow('obChips','pickOb',()=>obSection)}
+function pickAdd(i){addSection=i;chipRow('addChips','pickAdd',()=>addSection)}
+function pickQa(i){qaSection=i;chipRow('qaChips','pickQa',()=>qaSection)}
+pickOb(0);pickAdd(0);pickQa(0);
+
+/* ============ onboarding ============ */
+function ob(n){document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));document.querySelector(`[data-ob="${n}"]`).classList.add('active')}
+function setWill(el,v){willSel=v;document.querySelectorAll('#onboard .will-opt').forEach(b=>b.classList.remove('sel'));el.classList.add('sel')}
+function finishOb(){
+  const n=document.getElementById('obName').value.trim();
+  const h=document.getElementById('obHurt').value.trim();
+  if(n){people.unshift(mk(n,obSection,1,[],[],h));people[0].will=willSel;cur=0}
+  document.getElementById('onboard').classList.remove('active');
+  document.getElementById('mainNav').style.display='flex';
+  show('garden');toast('Your first seed is planted 🌱')
+}
+/* draggable olive branch */
+(function(){
+  const br=document.getElementById('branch');
+  let drag=false,ox=0,oy=0;
+  br.addEventListener('pointerdown',e=>{
+    drag=true;br.style.animation='none';
+    const r=br.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
+    br.setPointerCapture(e.pointerId);
+  });
+  br.addEventListener('pointermove',e=>{
+    if(!drag)return;
+    const pr=document.getElementById('phone').getBoundingClientRect();
+    br.style.left=Math.max(-30,Math.min(pr.width-80,e.clientX-pr.left-ox))+'px';
+    br.style.top=Math.max(-20,Math.min(pr.height-70,e.clientY-pr.top-oy))+'px';
+  });
+  br.addEventListener('pointerup',()=>{drag=false;br.style.animation=''});
+})();
+
+/* ============ nav ============ */
+function show(id){
+  const prev=document.querySelector('.screen.active');
+  if(prev&&prev.id!=='tips'&&prev.id!=='onboard')lastScreen=prev.id;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.nav===id));
+  if(id==='garden')drawGarden();
+  if(id==='path')drawPath();
+  if(id==='list')drawList();
+  if(id==='vault')drawVault();
+  if(id==='treeView')drawTreeView();
+}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.nav));
+
+/* ============ garden globe ============ */
+const CX=195,CY=900,RR=520;
+let rot=0, rotTarget=null;
+function treeArt(s){
+  if(s===1)return `<ellipse cx="0" cy="-4" rx="9" ry="5" fill="#5a4632"/><path d="M0,-6 Q-1,-16 -6,-20 M0,-6 Q1,-14 5,-18" stroke="#7fb069" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+  if(s===2)return `<rect x="-2" y="-34" width="4" height="34" rx="2" fill="#6b5138"/><circle cx="0" cy="-40" r="14" fill="#5e8c54"/><circle cx="-10" cy="-32" r="9" fill="#6da25f"/><circle cx="10" cy="-33" r="9" fill="#6da25f"/>`;
+  if(s===3)return `<rect x="-3" y="-52" width="6" height="52" rx="3" fill="#6b5138"/><circle cx="0" cy="-62" r="22" fill="#5e8c54"/><circle cx="-16" cy="-50" r="13" fill="#6da25f"/><circle cx="16" cy="-52" r="13" fill="#6da25f"/><circle cx="0" cy="-44" r="12" fill="#79b269"/>`;
+  return `<rect x="-3.5" y="-58" width="7" height="58" rx="3" fill="#6b5138"/><circle cx="0" cy="-70" r="25" fill="#5e8c54"/><circle cx="-18" cy="-56" r="14" fill="#6da25f"/><circle cx="18" cy="-58" r="14" fill="#6da25f"/>${[...Array(7)].map((_,k)=>`<circle cx="${-18+k*6}" cy="${-78+(k%3)*12}" r="3.2" fill="#f6c8d8"/>`).join("")}<circle cx="0" cy="-88" r="3.5" fill="#fde3ec"/>`;
+}
+const SLOTS=[6,-6,12,-12,18,-18,21,-21];
+function drawGarden(){
+  const svg=document.getElementById('gardenSvg');
+  const counts={};
+  const wedges=SECTIONS.map((s,k)=>{
+    const a0=(k*45-22.5)*Math.PI/180, a1=(k*45+22.5)*Math.PI/180;
+    const p0=[CX+RR*Math.sin(a0),CY-RR*Math.cos(a0)], p1=[CX+RR*Math.sin(a1),CY-RR*Math.cos(a1)];
+    return `<path d="M${CX},${CY} L${p0[0].toFixed(1)},${p0[1].toFixed(1)} A${RR} ${RR} 0 0 1 ${p1[0].toFixed(1)},${p1[1].toFixed(1)} Z" fill="${s.g}"/>`;
+  }).join("");
+  const marks=SECTIONS.map((s,k)=>
+    `<g transform="rotate(${k*45} ${CX} ${CY})"><g transform="translate(${CX} ${CY-RR})">
+      <text y="-6" text-anchor="middle" font-size="22">${s.e}</text>
+      <text y="12" class="tree-label" style="fill:rgba(253,248,236,.65);font-size:9px">${s.n}</text>
+    </g></g>`).join("");
+  const trees=people.map((p,i)=>{
+    counts[p.section]=(counts[p.section]||0);
+    const ang=p.section*45+SLOTS[counts[p.section]%SLOTS.length];
+    counts[p.section]++;
+    return `<g transform="rotate(${ang} ${CX} ${CY})"><g class="tree-g" data-i="${i}" transform="translate(${CX} ${CY-RR})">
+      <circle cy="-26" r="30" fill="transparent"/>
+      <g class="sway" style="animation-delay:${(i%7)*0.8}s"><g transform="scale(.8)">${treeArt(p.stage)}</g></g>
+      ${p.stage===4?'<text y="-82" text-anchor="middle" font-size="13">🕊️</text>':''}
+      <text class="tree-label" y="20">${p.name}</text>
+    </g></g>`;
+  }).join("");
+  svg.innerHTML=`<g id="rotG" transform="rotate(${rot} ${CX} ${CY})">
+    <circle cx="${CX}" cy="${CY}" r="${RR}" fill="#476b4b"/>
+    ${wedges}
+    <circle cx="${CX}" cy="${CY}" r="${RR}" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="3"/>
+    ${marks}${trees}</g>`;
+  updateSecUI();
+}
+function topSection(){return ((Math.round(-rot/45)%8)+8)%8}
+function updateSecUI(){
+  const k=topSection(), s=SECTIONS[k];
+  document.getElementById('secLabel').textContent=`${s.e} ${s.n} — ${s.d}`;
+  document.getElementById('sunset').style.opacity=k===7?1:0;
+  document.querySelectorAll('#secJump button').forEach((b,i)=>b.classList.toggle('on',i===k));
+}
+function applyRot(){const g=document.getElementById('rotG');if(g)g.setAttribute('transform',`rotate(${rot} ${CX} ${CY})`);updateSecUI()}
+document.getElementById('secJump').innerHTML=SECTIONS.map((s,i)=>`<button onclick="goSection(${i})" title="${s.n}">${s.e}</button>`).join("");
+function goSection(k){
+  let t=-k*45;
+  while(t-rot>180)t-=360; while(t-rot<-180)t+=360;
+  rotTarget=t;
+}
+(function spin(){
+  if(rotTarget!==null){
+    rot+=(rotTarget-rot)*0.12;
+    if(Math.abs(rotTarget-rot)<0.2){rot=rotTarget;rotTarget=null}
+    applyRot();
+  }
+  requestAnimationFrame(spin);
+})();
+/* drag to rotate + tap trees */
+(function(){
+  const svg=document.getElementById('gardenSvg');
+  let dragging=false,lastX=0,moved=0,target=null;
+  svg.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;moved=0;target=e.target.closest('.tree-g');rotTarget=null;svg.setPointerCapture(e.pointerId)});
+  svg.addEventListener('pointermove',e=>{
+    if(!dragging)return;
+    const dx=e.clientX-lastX;lastX=e.clientX;moved+=Math.abs(dx);
+    rot+=dx*0.12;applyRot();
+  });
+  svg.addEventListener('pointerup',e=>{
+    dragging=false;
+    if(moved<6&&target){openTree(+target.dataset.i)}
+    target=null;
+  });
+})();
+function openTree(i){cur=i;show('treeView')}
+function openPerson(i){cur=i;show('path')}
+function addPerson(){
+  const n=document.getElementById('addName').value.trim();
+  if(!n)return;
+  people.push(mk(n,addSection,1,[],[]));
+  document.getElementById('addName').value='';
+  closeModals();goSection(addSection);drawGarden();toast(`A seed for ${n} 🌱`)
+}
+/* dove flyover — rare (every 5 minutes) */
+function flyDove(){const d=document.getElementById('dove');d.classList.remove('fly');void d.offsetWidth;d.classList.add('fly')}
+setTimeout(()=>{flyDove();setInterval(flyDove,300000)},30000);
+
+/* ============ tree view (zoom) ============ */
+const BRANCHES=[
+ {x:-58,y:-78, sy:-38, w:"Willingness",note:"You showed up. Every tree starts here.",on:p=>p.log.length>0||p.done.length>0},
+ {x:54, y:-98, sy:-58, w:"Learning",note:"You learned what forgiveness is — and what it is not.",on:p=>p.done.includes(0)},
+ {x:-62,y:-128,sy:-76, w:"Growth",note:"You named the hurt, and grew around it.",on:p=>p.done.includes(1)},
+ {x:58, y:-152,sy:-92, w:"Mercy",note:"You said what needed saying — and sealed it.",on:p=>p.done.includes(2)},
+ {x:-44,y:-178,sy:-106,w:"Joy",note:"You sent a blessing across the field.",on:p=>p.done.includes(3)},
+ {x:38, y:-198,sy:-118,w:"Love",note:"You released them — and yourself.",on:p=>p.done.includes(5)}
+];
+const FRUITPOS=[[-58,-94],[54,-114],[-62,-144],[58,-168],[-44,-194],[38,-214],[0,-224]];
+function drawTreeView(){
+  const p=people[cur];
+  document.getElementById('tvName').textContent=p.name;
+  document.getElementById('tvMeta').textContent=`${SECTIONS[p.section].e} ${SECTIONS[p.section].n} · ${["","seed","sprout","sapling","in bloom 🌸"][p.stage]} · ${p.done.filter(d=>!STEPS[d].opt).length}/5 steps`;
+  document.getElementById('tvHurt').textContent=p.hurt?`“${p.hurt}”`:"";
+  document.getElementById('tvTrail').textContent=p.log.length?p.log.map(l=>FEELINGS[l.f][0]).join(" → "):"";
+  const act=BRANCHES.filter(b=>b.on(p));
+  const fruitN=Math.min(p.log.length+p.done.length,7);
+  let s=`<ellipse cx="0" cy="8" rx="120" ry="22" fill="rgba(0,0,0,.25)"/>
+    <path d="M0,6 L0,${act.length?-130:-60}" stroke="#6b5138" stroke-width="13" stroke-linecap="round"/>`;
+  BRANCHES.forEach((b,bi)=>{
+    if(!b.on(p))return;
+    s+=`<g class="branch-hot" onpointerenter="btipShow(event,'${b.w}','${b.note}')" onpointerdown="btipShow(event,'${b.w}','${b.note}')">
+      <path d="M0,${b.sy} Q${b.x*0.45},${b.sy-18} ${b.x},${b.y}" stroke="#6b5138" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <circle cx="${b.x}" cy="${b.y-8}" r="22" fill="#5e8c54"/>
+      <circle cx="${b.x-12}" cy="${b.y}" r="13" fill="#6da25f"/>
+      <circle cx="${b.x+12}" cy="${b.y-2}" r="13" fill="#6da25f"/>
+      <text x="${b.x}" y="${b.y-36}" text-anchor="middle" style="font-family:var(--serif);font-style:italic;font-size:13px;fill:rgba(232,200,120,.85)">${b.w}</text>
+    </g>`;
+  });
+  for(let f=0;f<fruitN;f++){
+    const [fx,fy]=FRUITPOS[f];
+    s+=`<g class="branch-hot" onpointerenter="btipShow(event,'${FRUITS[f]}','A fruit of your forgiveness — it ripened when you kept going.')" onpointerdown="btipShow(event,'${FRUITS[f]}','A fruit of your forgiveness — it ripened when you kept going.')">
+      <circle cx="${fx+10}" cy="${fy+16}" r="6.5" fill="#c9a13b" stroke="#8a6d1f" stroke-width="1.2"/>
+      <circle cx="${fx+8}" cy="${fy+14}" r="2" fill="rgba(255,255,255,.5)"/>
+    </g>`;
+  }
+  if(p.stage===4)s+=`<g class="doveLand"><text x="0" y="-232" text-anchor="middle" font-size="26">🕊️</text></g>`;
+  if(!act.length)s+=`<path d="M0,-58 Q-4,-74 -16,-84 M0,-58 Q4,-70 14,-80" stroke="#7fb069" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <text y="-104" text-anchor="middle" style="font-size:12px;fill:rgba(255,255,255,.55);font-family:var(--sans)">A seed, waiting. Take one step and watch it grow.</text>`;
+  document.getElementById('tvSvg').innerHTML=`<g class="sway">${s}</g>`;
+}
+function btipShow(e,word,note){
+  const tip=document.getElementById('btip');
+  tip.innerHTML=`<b>${word}</b>${note}`;
+  const pr=document.getElementById('phone').getBoundingClientRect();
+  let x=e.clientX-pr.left, y=e.clientY-pr.top;
+  x=Math.max(10,Math.min(x-90,pr.width-220)); y=Math.max(60,y-86);
+  tip.style.left=x+'px';tip.style.top=y+'px';tip.style.opacity=1;
+  clearTimeout(tip._t);tip._t=setTimeout(()=>tip.style.opacity=0,2400);
+}
+
+/* ============ path ============ */
+function feelEmoji(p){return p.log.length?FEELINGS[p.log[p.log.length-1].f][0]:"🌫️"}
+function drawPath(){
+  const p=people[cur];
+  document.getElementById('pathName').textContent=p.name;
+  document.getElementById('pathStage').textContent=["","SEED · STAGE 1 OF 4","SPROUT · STAGE 2 OF 4","SAPLING · STAGE 3 OF 4","IN BLOOM 🌸"][p.stage]+"  ·  "+SECTIONS[p.section].e+" "+SECTIONS[p.section].n;
+  document.getElementById('willbar').innerHTML=[1,2,3,4,5].map(v=>`<div class="${v<=p.will?'f':''}"></div>`).join("");
+  document.getElementById('pathSub').textContent=p.will<=2?"No pressure. Learning is a step. Willingness is a step.":"Small steps. Each one is a victory.";
+  document.getElementById('feelTrail').textContent=p.log.length?("Your journey: "+p.log.map(l=>FEELINGS[l.f][0]).join(" → ")):"";
+  document.getElementById('miniTree').innerHTML=`<g class="sway">${treeArt(p.stage)}</g>`;
+  const list=document.getElementById('stepList');
+  list.innerHTML=STEPS.map((s,i)=>{
+    const done=p.done.includes(i);
+    const prevReq=STEPS.slice(0,i).map((x,j)=>x.opt?null:j).filter(j=>j!==null);
+    const locked=!done&&!s.opt&&!prevReq.every(j=>p.done.includes(j));
+    return `<div class="step ${done?'done':''} ${locked?'locked':''}" onclick="${locked?'':'openEx('+i+')'}">
+      <div class="dot">${done?'✓':s.icon}</div>
+      <div><h4>${s.t}${s.opt?'<span class="optional">OPTIONAL</span>':''}</h4><p>${s.d}</p></div>
+    </div>`}).join("");
+}
+const EX={
+ learn:`<h3 class="serif">What forgiveness is — and isn't</h3>
+  <p><b>Forgiveness is not</b> excusing what happened, pretending it didn't hurt, forgetting, or reconciling. You can forgive someone you never speak to again. You can forgive someone who isn't sorry.</p>
+  <p><b>Forgiveness is</b> deciding to stop drinking the poison yourself. It is releasing your claim on revenge so the wound can finally close.</p>
+  <div class="quote">"Forgiveness is unlocking the door to set someone free — and realizing you were the prisoner."</div>`,
+ name:`<h3 class="serif">Name it — and how it feels</h3>
+  <p>Write what happened. Then choose every feeling that is true <i>today</i>. There are no wrong feelings — only honest ones. What you write is kept beside their tree on your List.</p>
+  <textarea rows="4" id="nameHurt" placeholder="What happened, and what it cost…"></textarea>
+  <div style="height:10px"></div>
+  <div class="feel-grid">${FEELINGS.map((f,i)=>`<button class="feel" onclick="this.classList.toggle('sel')">${f[0]} ${f[1]}</button>`).join("")}</div>`,
+ letter:`<h3 class="serif">The letter you'll never send</h3>
+  <p>Say everything you've never been allowed to say. When you finish, you'll seal it — not send it. If someday you choose to send it, that choice is always yours, never ours.</p>
+  <textarea rows="6" placeholder="Dear…"></textarea>`,
+ bless:`<h3 class="serif">The blessing visualization</h3>
+  <p>Close your eyes. Picture them standing far across a wide field — a safe, unreachable distance. They cannot speak. They cannot move closer.</p>
+  <p>Now, from where you stand, try sending one small good thing toward them: peace, or health, or simply the wish that they hurt no one else. You may only manage it for one second. One second is enough today.</p>
+  <div class="quote">You never need them in the room to be free of them.</div>`,
+ pray:`<h3 class="serif">A simple prayer</h3>
+  <p>A gentle stretch. One sentence, spoken to God, a higher power, or simply into the quiet — whatever is true for you:</p>
+  <div class="quote">"Help me to release what I cannot carry, and to want good for the one who hurt me — or to someday want to want it."</div>
+  <p>That's the whole prayer. You can stop there.</p>`,
+ release:`<h3 class="serif">The release</h3>
+  <p>Take a slow breath. When you're ready, speak these words — aloud or in your heart:</p>
+  <div class="quote">"What you did was real, and it mattered. But I will not carry it for you anymore. I release you. I release me."</div>`
+};
+function openEx(i){
+  const s=STEPS[i];
+  document.getElementById('exBody').innerHTML=EX[s.ex]+
+    (i>=2&&s.ex!=='pray'?`<div class="prayer-nudge"><h5>A gentle stretch 🙏</h5><p>"God, help me release what I can't carry alone."</p></div>`:'')+
+    `<div style="height:8px"></div><button class="btn" onclick="completeStep(${i})">${s.ex==='release'?'Release 🌸':'I did this step'}</button>
+     <button class="btn ghost" onclick="closeModals()">I'll come back to this</button>`;
+  document.getElementById('mEx').classList.add('open');
+  if(s.ex==='name'&&people[cur].hurt)document.getElementById('nameHurt').value=people[cur].hurt;
+}
+function completeStep(i){
+  const p=people[cur];
+  if(i===1){const ta=document.getElementById('nameHurt');if(ta&&ta.value.trim())p.hurt=ta.value.trim()}
+  closeModals();
+  if(!p.done.includes(i)){
+    p.done.push(i);
+    const req=p.done.filter(d=>!STEPS[d].opt).length;
+    p.stage=req>=5?4:req>=3?3:req>=1?2:1;
+    pending=i;
+    openCheckin(i); /* willingness check between every step */
+  }else drawPath();
+}
+
+/* ============ check-in (between steps + weekly) ============ */
+function openCheckin(stepI){
+  const p=people[cur];checkSel=null;
+  document.getElementById('checkBody').innerHTML=`
+   <h3 class="serif">${stepI===null?'Weekly check-in':'Quick check-in'}</h3>
+   <p>How do you feel about <b>${p.name}</b> right now? Watching this shift over time is the proof that you're healing.</p>
+   <div class="feel-grid">${FEELINGS.map((f,i)=>`<button class="feel" id="fe${i}" onclick="pickFeel(${i})">${f[0]} ${f[1]}</button>`).join("")}</div>
+   <textarea rows="2" id="checkNote" placeholder="Or describe it in your own words (optional)…"></textarea>
+   <div style="height:12px"></div>
+   <button class="btn" onclick="saveCheckin()">Save my check-in</button>
+   <button class="btn ghost" onclick="skipCheckin()">Skip for now</button>`;
+  document.getElementById('mCheck').classList.add('open');
+}
+function pickFeel(i){checkSel=i;FEELINGS.forEach((_,k)=>document.getElementById('fe'+k).classList.toggle('sel',k===i))}
+function saveCheckin(){
+  const p=people[cur];
+  if(checkSel!==null){
+    p.log.push({f:checkSel,note:document.getElementById('checkNote').value});
+    p.will=FEELINGS[checkSel][2];
+  }
+  closeModals();afterCheckin();
+}
+function skipCheckin(){closeModals();afterCheckin()}
+function afterCheckin(){
+  if(pending!==null){
+    const qi=Math.min(unlocked.length,QUOTES.length-1);
+    if(!unlocked.includes(qi))unlocked.push(qi);
+    showUnlock(pending,qi);pending=null;
+  }
+  drawPath();
+}
+
+/* ============ list ============ */
+function quickAdd(){
+  const n=document.getElementById('qaName').value.trim();
+  if(!n)return;
+  people.push(mk(n,qaSection,1,[],[]));
+  document.getElementById('qaName').value='';
+  drawList();toast(`${n} added — a seed is planted 🌱`)
+}
+function drawList(){
+  document.getElementById('listRows').innerHTML=people.map((p,i)=>`
+   <div class="lrow" onclick="openPerson(${i})">
+     <div class="stg">${["","🌱","🌿","🌳","🌸"][p.stage]}</div>
+     <div><h5>${p.name}</h5>
+       <p>${SECTIONS[p.section].e} ${SECTIONS[p.section].n} · ${["","seed","sprout","sapling","in bloom"][p.stage]} · ${p.done.filter(d=>!STEPS[d].opt).length}/5 steps</p>
+       ${p.hurt?`<p class="hurtline">“${p.hurt.length>52?p.hurt.slice(0,49)+'…':p.hurt}”</p>`:''}
+     </div>
+     <div class="fe">${feelEmoji(p)}</div>
+   </div>`).join("");
+}
+
+/* ============ unlock ============ */
+function showUnlock(stepI,qi){
+  const q=QUOTES[qi]||QUOTES[0];
+  document.getElementById('unlockEmoji').textContent=stepI===5?"🌸":STEPS[stepI].icon;
+  document.getElementById('unlockTitle').textContent=stepI===5?`${people[cur].name}'s tree is in bloom — a dove has come to rest`:"A step taken. A thought unlocked.";
+  document.getElementById('unlockQuote').textContent='"'+q[0]+'"';
+  document.getElementById('unlockAuthor').textContent="— "+q[1];
+  const u=document.getElementById('unlock');u.classList.add('open');
+  for(let k=0;k<18;k++){
+    const pt=document.createElement('div');pt.className='petal';
+    pt.textContent=stepI===5?["🌸","🕊️","✨"][k%3]:["🌸","✨","🍃"][k%3];
+    pt.style.left=Math.random()*92+'%';pt.style.top='-30px';
+    pt.style.animationDuration=(4+Math.random()*4)+'s';pt.style.animationDelay=(Math.random()*1.5)+'s';
+    u.appendChild(pt);setTimeout(()=>pt.remove(),9000);
+  }
+}
+function closeUnlock(){document.getElementById('unlock').classList.remove('open');drawGarden();drawPath()}
+
+/* ============ vault ============ */
+function drawVault(){
+  document.getElementById('vaultCount').textContent=`${unlocked.length} of ${QUOTES.length} unlocked — each step reveals another.`;
+  document.getElementById('vaultGrid').innerHTML=QUOTES.map((q,i)=>
+    unlocked.includes(i)
+    ?`<div class="vcard un" onclick="toast('Quote card ready to share ✨')"><span class="share">↗</span><div class="q">"${q[0].length>110?q[0].slice(0,107)+'…':q[0]}"</div><div class="a">${q[1]}</div></div>`
+    :`<div class="vcard lk">🔒</div>`).join("");
+}
+
+/* ============ misc ============ */
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModals(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('open'))}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity=1;t.style.transform='translateX(-50%) translateY(0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translateX(-50%) translateY(20px)'},2600)}
+for(let i=0;i<7;i++){const f=document.createElement('div');f.className='firefly';f.style.left=(10+Math.random()*80)+'%';f.style.bottom=(15+Math.random()*30)+'%';f.style.animationDelay=Math.random()*6+'s';document.querySelector('#garden .sky').appendChild(f)}
+drawGarden();
+
+/* ============ interactive star field (every screen) ============ */
+(function(){
+  const cv=document.getElementById('fx'),ctx=cv.getContext('2d');
+  const W=390,H=780,N=70;
+  const P=[];
+  for(let i=0;i<N;i++)P.push({
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.06,vy:(Math.random()-.5)*.06,
+    r:.8+Math.random()*1.6,ph:Math.random()*Math.PI*2,
+    gold:Math.random()<.3
+  });
+  let px=0,py=0,downP=false;
+  const phone=document.getElementById('phone');
+  function loc(e){const r=phone.getBoundingClientRect();return [ (e.clientX-r.left)*(W/r.width), (e.clientY-r.top)*(H/r.height) ]}
+  phone.addEventListener('pointerdown',e=>{
+    downP=true;[px,py]=loc(e);
+    P.forEach(p=>{
+      const dx=p.x-px,dy=p.y-py,d=Math.hypot(dx,dy);
+      if(d<130&&d>0.1){const f=3.2*(1-d/130);p.vx+=dx/d*f;p.vy+=dy/d*f}
+    });
+  });
+  phone.addEventListener('pointermove',e=>{
+    const [nx,ny]=loc(e);
+    if(downP){
+      const mx=nx-px,my=ny-py;
+      P.forEach(p=>{
+        const d=Math.hypot(p.x-nx,p.y-ny);
+        if(d<110){const f=(1-d/110)*.45;p.vx+=mx*f;p.vy+=my*f}
+      });
+    }
+    px=nx;py=ny;
+  });
+  phone.addEventListener('pointerup',()=>downP=false);
+  phone.addEventListener('pointercancel',()=>downP=false);
+  function darkScreen(){
+    if(document.getElementById('unlock').classList.contains('open'))return true;
+    const a=document.querySelector('.screen.active');
+    return a&&(a.id==='onboard'||a.id==='garden'||a.id==='treeView');
+  }
+  let t=0;
+  (function loop(){
+    t+=0.016;
+    ctx.clearRect(0,0,W,H);
+    const dark=darkScreen();
+    P.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy*=.96;
+      p.vx+=(Math.random()-.5)*.012;p.vy+=(Math.random()-.5)*.012;
+      if(p.x<-5)p.x=W+5;if(p.x>W+5)p.x=-5;if(p.y<-5)p.y=H+5;if(p.y>H+5)p.y=-5;
+      const tw=.5+.5*Math.sin(t*1.8+p.ph);
+      const a=dark?(.25+.65*tw):(.08+.18*tw);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);
+      ctx.fillStyle=p.gold?`rgba(232,200,120,${a})`:(dark?`rgba(255,255,255,${a})`:`rgba(74,124,89,${a})`);
+      ctx.fill();
+      if(dark&&p.gold&&tw>.8){ctx.beginPath();ctx.arc(p.x,p.y,p.r*2.6,0,7);ctx.fillStyle=`rgba(232,200,120,${(tw-.8)*.25})`;ctx.fill()}
+    });
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body>
+</html>
