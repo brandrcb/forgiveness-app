@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Olive — A Journey of Forgiveness</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -210,6 +210,16 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .prayer-nudge{margin:14px 0;background:linear-gradient(135deg,#fdf6e3,#f7ecd2);border:1px solid #ecd9a8;border-radius:16px;padding:15px 16px}
 .prayer-nudge h5{font-size:13px;color:#9a7b2d;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .prayer-nudge p{font-size:14px !important;color:#7a6633 !important;font-style:italic;font-family:var(--serif)}
+
+/* ---------- mobile: render edge-to-edge instead of the framed preview ---------- */
+@media (max-width:600px){
+  body{padding:0;background:var(--cream);align-items:stretch;justify-content:stretch;min-height:100vh;min-height:100dvh}
+  .phone{width:100vw;height:100vh;height:100dvh;max-height:none;border-radius:0;box-shadow:none}
+  /* keep header content clear of the notch / status bar */
+  .head{padding-top:calc(50px + env(safe-area-inset-top))}
+  /* keep bottom nav buttons clear of the home indicator */
+  .nav{height:calc(74px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+}
 </style>
 </head>
 <body>
