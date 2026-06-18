@@ -90,15 +90,20 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 
 /* ---------- Forgiveness Cloud ---------- */
 .cloud-q{position:absolute;right:18px;top:46px;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(232,200,120,.6);background:rgba(232,200,120,.16);color:var(--gold);font-size:24px;font-family:var(--serif);font-weight:600;cursor:pointer;transition:transform .2s,background .2s;z-index:3}
+.listhead h2,.listhead p{padding-right:58px}
+.notes-card{background:var(--card);border-radius:18px;margin:4px 20px 18px;padding:16px 18px;box-shadow:0 2px 10px rgba(40,60,80,.07);border-left:4px solid var(--leaf)}
+.notes-h{font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:600;margin-bottom:3px}
+.notes-sub{font-size:12px;color:#92a0ad;margin-bottom:10px;line-height:1.5}
+.notes-card textarea{width:100%;min-height:92px}
 .cloud-q:hover{transform:scale(1.09);background:rgba(232,200,120,.28)}
 #cloud{background:radial-gradient(circle at 50% 28%,#21384f,#0c1a2b 82%);color:#fff}
 .cloud-head{padding:46px 24px 6px;text-align:center;position:relative;z-index:3}
 .cloud-head h2{font-size:25px;font-weight:500}
 .cloud-head p{font-size:13px;color:#cdd9e4;margin-top:4px;font-style:italic;font-family:var(--serif);line-height:1.5}
-#cloudField{position:absolute;inset:118px 0 58px;overflow:hidden}
-.cloud-bubble{position:absolute;padding:9px 15px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(232,200,120,.3);color:#f3ece0;font-size:13.5px;font-family:var(--serif);font-style:italic;white-space:nowrap;cursor:pointer;animation:cloudDrift var(--d) ease-in-out infinite;transition:background .2s,transform .2s,border-color .2s;will-change:transform}
-.cloud-bubble:hover,.cloud-bubble:active{background:rgba(232,200,120,.3);border-color:var(--gold);transform:scale(1.07);z-index:5}
-@keyframes cloudDrift{0%,100%{transform:translate(0,0)}25%{transform:translate(11px,-15px)}50%{transform:translate(-9px,9px)}75%{transform:translate(7px,13px)}}
+#cloudField{position:absolute;inset:132px 0 56px;overflow:hidden;touch-action:none}
+.cloud-bubble{position:absolute;left:0;top:0;padding:9px 15px;border-radius:22px;background:rgba(255,255,255,.09);border:1px solid rgba(232,200,120,.32);color:#f5efe2;font-size:13.5px;font-family:var(--serif);font-style:italic;white-space:nowrap;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;will-change:transform;transition:background .18s,border-color .18s,box-shadow .18s}
+.cloud-bubble:hover{background:rgba(232,200,120,.24);border-color:var(--gold)}
+.cloud-bubble.grab{cursor:grabbing;background:rgba(232,200,120,.34);border-color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:6}
 .cloud-foot{position:absolute;left:0;right:0;bottom:0;padding:13px 20px calc(13px + env(safe-area-inset-bottom));text-align:center;font-size:11.5px;color:#9fb1c3;background:linear-gradient(0deg,rgba(12,26,43,.92),transparent)}
 
 /* section chips */
@@ -385,13 +390,14 @@ input:focus,textarea:focus{border-color:var(--leaf)}
       <svg id="miniTree" viewBox="-45 -110 90 130"></svg>
     </div>
     <div class="scroll"><div class="steps" id="stepList"></div>
+      <div id="notesWrap" class="notes-card"></div>
       <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
     </div>
   </div>
 
   <!-- ================= LIST ================= -->
   <div class="screen" id="list">
-    <div class="head"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p><button class="cloud-q" onclick="openCloud()" title="Forgiveness Cloud">?</button></div>
+    <div class="head listhead"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p><button class="cloud-q" onclick="openCloud()" title="Forgiveness Cloud">?</button></div>
     <div class="scroll">
       <div class="quickadd">
         <input type="text" id="qaName" placeholder="Add a name…" maxlength="30" onkeydown="if(event.key==='Enter')quickAdd()">
@@ -617,7 +623,7 @@ const STEPS=[
  {icon:"🙏",t:"A simple prayer",d:"A gentle stretch outside the comfort zone. One sentence, to God, a higher power, or the silence — whatever that means to you.",ex:"pray",opt:true},
  {icon:"🌸",t:"The release",d:"A short ceremony. Speak the words, let the tree bloom, and feel what lifts.",ex:"release"}
 ];
-function mk(name,section,stage,done,log,hurt){return {name,section,stage,will:log.length?FEELINGS[log[log.length-1].f][2]:2,done,log,hurt:hurt||""}}
+function mk(name,section,stage,done,log,hurt){return {name,section,stage,will:log.length?FEELINGS[log[log.length-1].f][2]:2,done,log,hurt:hurt||"",notes:""}}
 let people=[
  /* Family */
  mk("Mom",0,1,[],[]),
@@ -908,13 +914,58 @@ function maybeTutorial(){
 }
 /* ============ Forgiveness Cloud ============ */
 const CLOUD_PHRASES=["a broken promise","a friend who drifted away","being left out","a harsh word said in haste","an apology that never came","being ghosted","a forgotten birthday","feeling unseen","a canceled plan","a dismissive comment","being judged","a small betrayal","a call never returned","being talked over","a cold goodbye","feeling compared to others","an old grudge","being misunderstood","a joke at your expense","a friendship that faded","being last to know","feeling taken for granted","a door closed too soon","words you never got to say"];
-function openCloud(){
-  const f=document.getElementById('cloudField');
-  f.innerHTML=CLOUD_PHRASES.map(t=>{
-    const x=(6+Math.random()*62).toFixed(1), y=(2+Math.random()*88).toFixed(1), d=(9+Math.random()*8).toFixed(1), delay=(-Math.random()*8).toFixed(1);
-    return `<div class="cloud-bubble" style="left:${x}%;top:${y}%;--d:${d}s;animation-delay:${delay}s" onclick="chooseCloud(this.textContent)">${t}</div>`;
-  }).join("");
-  show('cloud');
+let cloudRAF=null, cloudB=[], cloudPtr={x:-999,y:-999}, cloudDrag=null, cloudFieldEl=null;
+function openCloud(){ show('cloud'); requestAnimationFrame(()=>buildCloud()); }
+function buildCloud(){
+  const f=document.getElementById('cloudField'); cloudFieldEl=f; f.innerHTML=''; cloudB=[];
+  const W=f.clientWidth||360, H=f.clientHeight||500, cols=3, rows=Math.ceil(CLOUD_PHRASES.length/cols);
+  CLOUD_PHRASES.forEach((t,i)=>{
+    const el=document.createElement('div'); el.className='cloud-bubble'; el.textContent=t; f.appendChild(el);
+    const bw=el.offsetWidth, bh=el.offsetHeight;
+    const gx=(i%cols+0.5)/cols*W, gy=(Math.floor(i/cols)+0.5)/rows*H;
+    const b={el,bw,bh,
+      x:Math.max(4,Math.min(W-bw-4, gx-bw/2+(Math.random()-.5)*36)),
+      y:Math.max(4,Math.min(H-bh-4, gy-bh/2+(Math.random()-.5)*26)),
+      vx:(Math.random()-.5)*.5, vy:(Math.random()-.5)*.5};
+    cloudB.push(b); el.style.transform=`translate(${b.x}px,${b.y}px)`;
+    el.addEventListener('pointerdown',e=>cloudGrab(e,b));
+  });
+  f.onpointermove=cloudMove; f.onpointerup=cloudUp; f.onpointercancel=cloudUp;
+  f.onpointerleave=()=>{cloudPtr.x=cloudPtr.y=-999;};
+  if(cloudRAF)cancelAnimationFrame(cloudRAF); cloudLoop();
+}
+function cloudPt(e){const r=cloudFieldEl.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
+function cloudGrab(e,b){e.stopPropagation();cloudDrag=b;b.el.classList.add('grab');
+  const [px,py]=cloudPt(e); b._ox=px-b.x; b._oy=py-b.y; b._sx=px; b._sy=py;
+  cloudFieldEl.setPointerCapture&&cloudFieldEl.setPointerCapture(e.pointerId);}
+function cloudMove(e){const [px,py]=cloudPt(e); cloudPtr.x=px; cloudPtr.y=py;
+  if(cloudDrag){cloudDrag.x=px-cloudDrag._ox; cloudDrag.y=py-cloudDrag._oy; cloudDrag.vx=0; cloudDrag.vy=0;}}
+function cloudUp(e){
+  if(cloudDrag){const b=cloudDrag,[px,py]=cloudPt(e); b.el.classList.remove('grab'); cloudDrag=null;
+    if(Math.hypot(px-b._sx,py-b._sy)<6){chooseCloud(b.el.textContent);} }
+}
+function cloudLoop(){
+  const f=cloudFieldEl;
+  if(!f||document.querySelector('.screen.active').id!=='cloud'){cloudRAF=null;return;}
+  const W=f.clientWidth, H=f.clientHeight;
+  for(let i=0;i<cloudB.length;i++){
+    const b=cloudB[i];
+    if(b===cloudDrag){b.el.style.transform=`translate(${b.x}px,${b.y}px)`;continue;}
+    b.vx+=(Math.random()-.5)*.04; b.vy+=(Math.random()-.5)*.04;
+    if(cloudPtr.x>-900){const dx=b.x+b.bw/2-cloudPtr.x, dy=b.y+b.bh/2-cloudPtr.y, d=Math.hypot(dx,dy);
+      if(d<95&&d>.1){const fp=(1-d/95)*1.2; b.vx+=dx/d*fp; b.vy+=dy/d*fp;}}
+    for(let j=0;j<cloudB.length;j++){ if(j===i)continue; const o=cloudB[j];
+      const ox=(b.x+b.bw/2)-(o.x+o.bw/2), oy=(b.y+b.bh/2)-(o.y+o.bh/2);
+      const mnx=(b.bw+o.bw)/2+8, mny=(b.bh+o.bh)/2+5;
+      if(Math.abs(ox)<mnx&&Math.abs(oy)<mny){const d=Math.hypot(ox,oy)||.1; b.vx+=ox/d*.28; b.vy+=oy/d*.28;}}
+    b.vx*=.93; b.vy*=.93;
+    const sp=Math.hypot(b.vx,b.vy); if(sp>2.4){b.vx*=2.4/sp; b.vy*=2.4/sp;}
+    b.x+=b.vx; b.y+=b.vy;
+    if(b.x<2){b.x=2;b.vx=Math.abs(b.vx)*.6;} if(b.x>W-b.bw-2){b.x=W-b.bw-2;b.vx=-Math.abs(b.vx)*.6;}
+    if(b.y<2){b.y=2;b.vy=Math.abs(b.vy)*.6;} if(b.y>H-b.bh-2){b.y=H-b.bh-2;b.vy=-Math.abs(b.vy)*.6;}
+    b.el.style.transform=`translate(${b.x}px,${b.y}px)`;
+  }
+  cloudRAF=requestAnimationFrame(cloudLoop);
 }
 function chooseCloud(txt){
   people.push(mk(txt,3,1,[],[]));
@@ -1006,7 +1057,10 @@ function drawPath(){
       <div class="dot">${done?'✓':s.icon}</div>
       <div><h4>${s.t}${s.opt?'<span class="optional">OPTIONAL</span>':''}</h4><p>${s.d}</p></div>
     </div>`}).join("");
+  const nw=document.getElementById('notesWrap');
+  if(nw)nw.innerHTML=`<h4 class="notes-h">My private notes</h4><p class="notes-sub">For your eyes only — anything you want to remember about ${p.name}.</p><textarea id="pNotes" rows="4" placeholder="Write freely…" oninput="saveNote(this.value)">${(p.notes||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>`;
 }
+function saveNote(v){if(people[cur]){people[cur].notes=v;save();}}
 const EX={
  learn:`<h3 class="serif">What forgiveness is — and isn't</h3>
   <p><b>Forgiveness is not</b> excusing what happened, pretending it didn't hurt, forgetting, or reconciling. You can forgive someone you never speak to again. You can forgive someone who isn't sorry.</p>
@@ -1189,7 +1243,7 @@ drawGarden();
   function darkScreen(){
     if(document.getElementById('unlock').classList.contains('open'))return true;
     const a=document.querySelector('.screen.active');
-    return a&&(a.id==='onboard'||a.id==='garden'||a.id==='treeView');
+    return a&&(a.id==='onboard'||a.id==='garden'||a.id==='treeView'||a.id==='cloud');
   }
   let t=0;
   (function loop(){
