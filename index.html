@@ -55,6 +55,57 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 @keyframes branchFloat{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg) translateY(-7px)}}
 .branch-hint{position:absolute;top:calc(7% + 98px);left:6%;font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.08em;z-index:6;pointer-events:none}
 
+/* ---------- olive-branch → dove burst ---------- */
+.spark{position:absolute;z-index:66;pointer-events:none;will-change:transform,opacity;animation:sparkfly 1s ease-out forwards}
+@keyframes sparkfly{0%{transform:translate(0,0) scale(.3);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.05) rotate(var(--rot));opacity:0}}
+.forgive-quote{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.92);z-index:67;width:300px;max-width:84%;text-align:center;padding:24px 24px;border-radius:24px;background:rgba(15,27,45,.82);border:1px solid rgba(232,200,120,.5);backdrop-filter:blur(6px);opacity:0;transition:opacity .6s,transform .6s;pointer-events:none;box-shadow:0 22px 60px rgba(0,0,0,.55)}
+.forgive-quote.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.forgive-quote .fq{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.45;color:#fff}
+.forgive-quote .fa{margin-top:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+/* ---------- first-visit garden tutorial ---------- */
+#tutorial{position:absolute;inset:0;z-index:45;display:none;pointer-events:none}
+#tutorial.on{display:block}
+#tutScrim{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,transparent 44%,rgba(8,16,28,.4) 96%);pointer-events:none;animation:fadeUp .6s ease}
+#tutHalo{position:absolute;width:104px;height:104px;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 28px 8px rgba(232,200,120,.5),inset 0 0 18px rgba(232,200,120,.35);display:none;z-index:46;pointer-events:none;animation:haloPulse 1.9s ease-in-out infinite}
+@keyframes haloPulse{0%,100%{transform:scale(.9);opacity:.65}50%{transform:scale(1.1);opacity:1}}
+#tutCard{position:absolute;left:18px;right:18px;bottom:104px;z-index:47;pointer-events:auto;background:rgba(15,27,45,.93);border:1px solid rgba(232,200,120,.42);border-radius:24px;padding:22px 22px 18px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.55);animation:fadeUp .5s ease}
+#tutCap{font-family:var(--serif);font-style:italic;font-size:18.5px;line-height:1.5;color:#f3ece0;min-height:84px;display:flex;align-items:center;justify-content:center}
+#tutCap b{font-style:normal;font-family:var(--sans);font-weight:700;color:var(--gold);font-size:15px;letter-spacing:.02em}
+.tut-dots{display:flex;gap:6px;justify-content:center;margin:12px 0 14px}
+.tut-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
+.tut-dots i.on{background:var(--gold)}
+.tut-row{display:flex;gap:10px;justify-content:center}
+.tut-row button{font-family:var(--sans);cursor:pointer;border-radius:14px;padding:11px 22px;font-size:14px;font-weight:600;border:none}
+#tutNext{background:linear-gradient(135deg,#d4a94e,#e8c878);color:#5a4310}
+#tutSkip{background:transparent;color:#9fb4c7;border:1px solid rgba(255,255,255,.22)}
+/* ---------- Garden Paths bar ---------- */
+.paths-bar{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:7px 8px calc(9px + env(safe-area-inset-bottom));background:rgba(13,23,37,.5);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);border-top:1px solid rgba(232,200,120,.28)}
+.paths-title{text-align:center;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(232,200,120,.85);margin-bottom:5px;font-weight:700}
+.paths-row{display:flex;gap:3px;justify-content:space-between}
+.paths-row button{flex:1 1 0;min-width:0;height:46px;border:none;background:transparent;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .22s,background .22s,opacity .22s,filter .22s;filter:grayscale(.45);opacity:.6}
+.paths-row button .pe{font-size:19px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.paths-row button .pn{font-size:7.5px;letter-spacing:.02em;color:rgba(255,255,255,.72);text-transform:uppercase;white-space:nowrap}
+.paths-row button.on{background:rgba(232,200,120,.2);filter:none;opacity:1;transform:translateY(-3px);box-shadow:0 5px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.15)}
+#gardenProgress b{font-weight:700}
+
+/* ---------- Forgiveness Cloud ---------- */
+.cloud-q{position:absolute;right:18px;top:46px;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(232,200,120,.6);background:rgba(232,200,120,.16);color:var(--gold);font-size:24px;font-family:var(--serif);font-weight:600;cursor:pointer;transition:transform .2s,background .2s;z-index:3}
+.listhead h2,.listhead p{padding-right:58px}
+.notes-card{background:var(--card);border-radius:18px;margin:4px 20px 18px;padding:16px 18px;box-shadow:0 2px 10px rgba(40,60,80,.07);border-left:4px solid var(--leaf)}
+.notes-h{font-family:var(--serif);font-size:18px;color:var(--ink);font-weight:600;margin-bottom:3px}
+.notes-sub{font-size:12px;color:#92a0ad;margin-bottom:10px;line-height:1.5}
+.notes-card textarea{width:100%;min-height:92px}
+.cloud-q:hover{transform:scale(1.09);background:rgba(232,200,120,.28)}
+#cloud{background:radial-gradient(circle at 50% 28%,#21384f,#0c1a2b 82%);color:#fff}
+.cloud-head{padding:46px 24px 6px;text-align:center;position:relative;z-index:3}
+.cloud-head h2{font-size:25px;font-weight:500}
+.cloud-head p{font-size:13px;color:#cdd9e4;margin-top:4px;font-style:italic;font-family:var(--serif);line-height:1.5}
+#cloudField{position:absolute;inset:132px 0 56px;overflow:hidden;touch-action:none}
+.cloud-bubble{position:absolute;left:0;top:0;padding:9px 15px;border-radius:22px;background:rgba(255,255,255,.09);border:1px solid rgba(232,200,120,.32);color:#f5efe2;font-size:13.5px;font-family:var(--serif);font-style:italic;white-space:nowrap;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;will-change:transform;transition:background .18s,border-color .18s,box-shadow .18s}
+.cloud-bubble:hover{background:rgba(232,200,120,.24);border-color:var(--gold)}
+.cloud-bubble.grab{cursor:grabbing;background:rgba(232,200,120,.34);border-color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:6}
+.cloud-foot{position:absolute;left:0;right:0;bottom:0;padding:13px 20px calc(13px + env(safe-area-inset-bottom));text-align:center;font-size:11.5px;color:#9fb1c3;background:linear-gradient(0deg,rgba(12,26,43,.92),transparent)}
+
 /* section chips */
 .chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0}
 .chip{padding:7px 12px;border-radius:20px;border:1.5px solid #ddd3c0;background:#fff;color:#5b6b7a;font-size:12.5px;cursor:pointer;font-family:var(--sans);transition:all .2s}
@@ -75,12 +126,12 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .garden-head p{font-size:12.5px;color:#cfd9d4;margin-top:4px}
 #secLabel{margin-top:8px;display:inline-block;background:rgba(0,0,0,.28);border:1px solid rgba(232,200,120,.4);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--gold);transition:all .3s}
 .tree-g{cursor:pointer}
-.tree-label{font-family:var(--sans);font-size:10.5px;fill:#fdf8ec;text-anchor:middle;letter-spacing:.04em;pointer-events:none}
+.tree-label{font-family:var(--sans);font-size:10.5px;fill:#fdf8ec;text-anchor:middle;letter-spacing:.04em;pointer-events:none;paint-order:stroke;stroke:rgba(8,18,28,.55);stroke-width:2.6px;stroke-linejoin:round}
 .sway{animation:sway 6s ease-in-out infinite;transform-origin:bottom center}
 @keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
-.add-seed{position:absolute;bottom:96px;right:18px;width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3;transition:transform .2s}
+.add-seed{position:absolute;bottom:122px;right:18px;width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3;transition:transform .2s}
 .add-seed:hover{transform:scale(1.08)}
-.tips-bulb{position:absolute;bottom:96px;left:18px;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.35);border:1px solid rgba(232,200,120,.5);font-size:19px;z-index:3;cursor:pointer;transition:transform .2s}
+.tips-bulb{position:absolute;bottom:122px;left:18px;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.35);border:1px solid rgba(232,200,120,.5);font-size:19px;z-index:3;cursor:pointer;transition:transform .2s}
 .tips-bulb:hover{transform:scale(1.1)}
 .sec-jump{position:absolute;bottom:84px;left:70px;right:74px;display:flex;justify-content:center;gap:5px;z-index:3}
 .sec-jump button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);font-size:14px;cursor:pointer;transition:all .25s}
@@ -115,10 +166,10 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 
 /* ---------- nav ---------- */
 .nav{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(250,247,238,.96);backdrop-filter:blur(8px);display:flex;border-top:1px solid #e6dec9;z-index:10}
-.nav button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:9.5px;color:#8c9aa8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-bottom:8px}
-.nav button .ico{font-size:20px;filter:grayscale(.7);opacity:.65;transition:all .25s}
+.nav button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:9.5px;color:#39434f;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-bottom:8px}
+.nav button .ico{font-size:19px;width:42px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:13px;background:#efe7d4;box-shadow:0 2px 5px rgba(40,60,80,.2),inset 0 1px 0 rgba(255,255,255,.6);filter:grayscale(.5) drop-shadow(0 1px 1px rgba(0,0,0,.28));opacity:.78;transition:all .25s}
 .nav button.on{color:var(--leaf-dark);font-weight:700}
-.nav button.on .ico{filter:none;opacity:1;transform:translateY(-2px)}
+.nav button.on .ico{filter:none drop-shadow(0 2px 3px rgba(0,0,0,.25));opacity:1;background:linear-gradient(135deg,#e6f1dd,#cfe6c0);box-shadow:0 5px 12px rgba(74,124,89,.35),inset 0 1px 0 rgba(255,255,255,.7);transform:translateY(-3px)}
 
 /* ---------- path ---------- */
 .head{padding:50px 24px 18px;background:linear-gradient(180deg,#1d3450,#2a4a6b);color:#fff;position:relative}
@@ -247,7 +298,6 @@ input:focus,textarea:focus{border-color:var(--leaf)}
           <circle cx="88" cy="42" r="5.5" fill="#5c6b35"/>
         </svg>
       </div>
-      <div class="branch-hint">drag me ↷</div>
       <div class="breath"><span>🕊️</span></div>
       <h1>Olive</h1>
       <div class="tagline">"Extend the olive branch."</div>
@@ -295,16 +345,29 @@ input:focus,textarea:focus{border-color:var(--leaf)}
       <div id="dove">🕊️</div>
       <div class="garden-head">
         <h2 class="serif">Your Garden</h2>
-        <p>Drag the globe to wander. Tap a tree to visit it.</p>
-        <div id="secLabel">🏡 Family</div>
+        <p id="gardenProgress">Your garden is taking root.</p>
       </div>
       <svg id="gardenSvg" viewBox="0 0 390 608" preserveAspectRatio="xMidYMax slice"></svg>
       <button class="gnav left" onclick="stepSection(-1)" aria-label="Previous section">‹</button>
       <button class="gnav right" onclick="stepSection(1)" aria-label="Next section">›</button>
-      <div class="sec-jump" id="secJump"></div>
+      <div class="paths-bar">
+        <div class="paths-title">Garden Paths</div>
+        <div class="paths-row" id="secJump"></div>
+      </div>
       <button class="tips-bulb" onclick="show('tips')" title="Tips">💡</button>
       <button class="add-seed" onclick="openModal('mAdd')" title="Plant a new seed">＋</button>
     </div>
+  </div>
+
+  <!-- ================= FORGIVENESS CLOUD ================= -->
+  <div class="screen" id="cloud">
+    <div class="cloud-head">
+      <span class="backchip" onclick="show('list')">← List</span>
+      <h2 class="serif">The Forgiveness Cloud</h2>
+      <p>moves with you and shows you things you may want to examine more closely.</p>
+    </div>
+    <div id="cloudField"></div>
+    <div class="cloud-foot">Tap a thought that stirs something — it joins your list, ready whenever you are.</div>
   </div>
 
   <!-- ================= TREE VIEW (zoom) ================= -->
@@ -335,13 +398,14 @@ input:focus,textarea:focus{border-color:var(--leaf)}
       <svg id="miniTree" viewBox="-45 -110 90 130"></svg>
     </div>
     <div class="scroll"><div class="steps" id="stepList"></div>
+      <div id="notesWrap" class="notes-card"></div>
       <button class="tipsbtn" onclick="show('tips')">💡 Tips — new ways to think about forgiveness</button>
     </div>
   </div>
 
   <!-- ================= LIST ================= -->
   <div class="screen" id="list">
-    <div class="head"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p></div>
+    <div class="head listhead"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p><button class="cloud-q" onclick="openCloud()" title="Forgiveness Cloud">?</button></div>
     <div class="scroll">
       <div class="quickadd">
         <input type="text" id="qaName" placeholder="Add a name…" maxlength="30" onkeydown="if(event.key==='Enter')quickAdd()">
@@ -510,6 +574,20 @@ input:focus,textarea:focus{border-color:var(--leaf)}
     <button data-nav="together"><span class="ico">🤝</span>Together</button>
   </div>
 
+  <!-- ================= FIRST-VISIT TUTORIAL ================= -->
+  <div id="tutorial">
+    <div id="tutScrim"></div>
+    <div id="tutHalo"></div>
+    <div id="tutCard">
+      <div id="tutCap"></div>
+      <div class="tut-dots" id="tutDots"></div>
+      <div class="tut-row">
+        <button id="tutSkip" onclick="endTutorial()">Skip</button>
+        <button id="tutNext" onclick="tutNext()">Next</button>
+      </div>
+    </div>
+  </div>
+
   <div id="btip"></div>
   <canvas id="fx" width="390" height="780"></canvas>
   <div id="toast" style="position:absolute;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#22303f;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;opacity:0;transition:all .4s;z-index:70;pointer-events:none;white-space:nowrap">.</div>
@@ -521,7 +599,7 @@ const SECTIONS=[
  {n:"Family",e:"🏡",g:"#4f7a4f",d:"a hearth that never goes cold"},
  {n:"Friends",e:"⛲",g:"#54855f",d:"a fountain in the square"},
  {n:"Work",e:"🏮",g:"#46705e",d:"a lamplit bench"},
- {n:"Life",e:"🪨",g:"#507a49",d:"a stone walkway"},
+ {n:"Life",e:"🧭",g:"#507a49",d:"a compass for the everyday"},
  {n:"Faith",e:"🕯️",g:"#5d6f8a",d:"a quiet chapel garden"},
  {n:"School",e:"🔔",g:"#5e8254",d:"an old bell and bookshelf"},
  {n:"Love",e:"❤️",g:"#7a5a62",d:"an arch of climbing roses"},
@@ -553,7 +631,7 @@ const STEPS=[
  {icon:"🙏",t:"A simple prayer",d:"A gentle stretch outside the comfort zone. One sentence, to God, a higher power, or the silence — whatever that means to you.",ex:"pray",opt:true},
  {icon:"🌸",t:"The release",d:"A short ceremony. Speak the words, let the tree bloom, and feel what lifts.",ex:"release"}
 ];
-function mk(name,section,stage,done,log,hurt){return {name,section,stage,will:log.length?FEELINGS[log[log.length-1].f][2]:2,done,log,hurt:hurt||""}}
+function mk(name,section,stage,done,log,hurt){return {name,section,stage,will:log.length?FEELINGS[log[log.length-1].f][2]:2,done,log,hurt:hurt||"",notes:""}}
 let people=[
  /* Family */
  mk("Mom",0,1,[],[]),
@@ -567,6 +645,8 @@ let people=[
  mk("Maya",1,2,[0],[{f:4,note:""}]),
  mk("Old roommate",1,1,[],[]),
  mk("J.T.",1,1,[],[]),
+ mk("Being ghosted",1,1,[],[]),
+ mk("Betrayed",1,1,[],[]),
  /* Work */
  mk("M.K.",2,1,[],[{f:0,note:""}],"Took credit for two years of my work."),
  mk("The boss",2,1,[],[]),
@@ -575,6 +655,8 @@ let people=[
  mk("The neighbor",3,1,[],[]),
  mk("The stranger",3,2,[0],[{f:2,note:""}]),
  mk("Myself",3,1,[],[]),
+ mk("Being judged",3,1,[],[]),
+ mk("Scammed",3,1,[],[]),
  /* Faith */
  mk("Pastor R.",4,1,[],[]),
  mk("The church",4,1,[],[]),
@@ -583,6 +665,7 @@ let people=[
  mk("The bully",5,2,[0],[{f:2,note:""}]),
  mk("Coach",5,1,[],[]),
  mk("Mrs. T.",5,1,[],[]),
+ mk("Bullied",5,1,[],[]),
  /* Love */
  mk("Em",6,2,[0],[{f:2,note:""}],"Left without a word."),
  mk("First love",6,1,[],[]),
@@ -594,6 +677,25 @@ let people=[
 ];
 let cur=1, willSel=3, unlocked=[0,1,2], pending=null, checkSel=null, lastScreen='garden';
 let obSection=0, addSection=0, qaSection=0;
+
+/* ============ saved progress (per device/browser) ============ */
+const SAVE_KEY='olive_save_v1';
+function save(){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({people,unlocked,onboarded:true}))}catch(e){}
+}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');
+    if(d&&Array.isArray(d.people)&&d.people.length){
+      people=d.people;
+      unlocked=Array.isArray(d.unlocked)?d.unlocked:[0,1,2];
+      return !!d.onboarded;
+    }
+  }catch(e){}
+  return false;
+}
+/* lets a tester start over from the browser console: oliveReset() */
+window.oliveReset=function(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()};
 
 /* ============ section chips ============ */
 function chipRow(elId,onPick,getSel){
@@ -612,14 +714,53 @@ function finishOb(){
   const n=document.getElementById('obName').value.trim();
   const h=document.getElementById('obHurt').value.trim();
   if(n){people.unshift(mk(n,obSection,1,[],[],h));people[0].will=willSel;cur=0}
+  save();
   document.getElementById('onboard').classList.remove('active');
   document.getElementById('mainNav').style.display='flex';
   show('garden');toast('Your first seed is planted 🌱')
 }
-/* draggable olive branch */
+/* a burst of stars + a forgiveness quote — at most once every 10s */
+let burstBusy=false, doveArmed=true;
+function oliveBurst(cx,cy){
+  const phone=document.getElementById('phone');
+  const chars=['✨','⭐','🌟','✦','💫','🕊️'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('div');s.className='spark';
+    s.textContent=chars[i%chars.length];
+    const ang=Math.random()*Math.PI*2, dist=55+Math.random()*165;
+    s.style.left=cx+'px';s.style.top=cy+'px';
+    s.style.fontSize=(12+Math.random()*16)+'px';
+    s.style.setProperty('--dx',(Math.cos(ang)*dist).toFixed(1)+'px');
+    s.style.setProperty('--dy',(Math.sin(ang)*dist).toFixed(1)+'px');
+    s.style.setProperty('--rot',(Math.random()*320-160).toFixed(0)+'deg');
+    s.style.animationDelay=(Math.random()*.12).toFixed(2)+'s';
+    phone.appendChild(s);setTimeout(()=>s.remove(),1200);
+  }
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  const card=document.createElement('div');card.className='forgive-quote';
+  card.innerHTML=`<div class="fq">“${q[0]}”</div><div class="fa">— ${q[1]}</div>`;
+  phone.appendChild(card);
+  requestAnimationFrame(()=>card.classList.add('show'));
+  setTimeout(()=>{card.classList.remove('show');setTimeout(()=>card.remove(),700)},4600);
+}
+
+/* draggable olive branch — meet it with the dove to bloom a blessing */
 (function(){
   const br=document.getElementById('branch');
   let drag=false,ox=0,oy=0;
+  function checkDoveHit(){
+    const dove=document.querySelector('#onboard .breath');
+    if(!dove)return;
+    const a=br.getBoundingClientRect(), b=dove.getBoundingClientRect();
+    const hit=!(a.right<b.left||a.left>b.right||a.bottom<b.top||a.top>b.bottom);
+    if(!hit){doveArmed=true;return;}            /* re-arm only after the branch leaves the dove */
+    if(doveArmed&&!burstBusy){
+      doveArmed=false;burstBusy=true;            /* locked for a full 10s, regardless of touches */
+      setTimeout(()=>{burstBusy=false},10000);
+      const pr=document.getElementById('phone').getBoundingClientRect();
+      oliveBurst((b.left+b.right)/2-pr.left,(b.top+b.bottom)/2-pr.top);
+    }
+  }
   br.addEventListener('pointerdown',e=>{
     drag=true;br.style.animation='none';
     const r=br.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
@@ -630,8 +771,9 @@ function finishOb(){
     const pr=document.getElementById('phone').getBoundingClientRect();
     br.style.left=Math.max(-30,Math.min(pr.width-80,e.clientX-pr.left-ox))+'px';
     br.style.top=Math.max(-20,Math.min(pr.height-70,e.clientY-pr.top-oy))+'px';
+    checkDoveHit();
   });
-  br.addEventListener('pointerup',()=>{drag=false;br.style.animation=''});
+  br.addEventListener('pointerup',()=>{drag=false;br.style.animation='';checkDoveHit()});
 })();
 
 /* ============ nav ============ */
@@ -641,7 +783,7 @@ function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.nav===id));
-  if(id==='garden')drawGarden();
+  if(id==='garden'){drawGarden();maybeTutorial();}
   if(id==='path')drawPath();
   if(id==='list')drawList();
   if(id==='vault')drawVault();
@@ -650,7 +792,7 @@ function show(id){
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.nav));
 
 /* ============ garden globe ============ */
-const CX=195,CY=900,RR=520;
+const CX=195,CY=1080,RR=840;
 let rot=0, rotTarget=null;
 function treeArt(s){
   if(s===1)return `<ellipse cx="0" cy="-4" rx="9" ry="5" fill="#5a4632"/><path d="M0,-6 Q-1,-16 -6,-20 M0,-6 Q1,-14 5,-18" stroke="#7fb069" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
@@ -659,6 +801,7 @@ function treeArt(s){
   return `<rect x="-3.5" y="-58" width="7" height="58" rx="3" fill="#6b5138"/><circle cx="0" cy="-70" r="25" fill="#5e8c54"/><circle cx="-18" cy="-56" r="14" fill="#6da25f"/><circle cx="18" cy="-58" r="14" fill="#6da25f"/>${[...Array(7)].map((_,k)=>`<circle cx="${-18+k*6}" cy="${-78+(k%3)*12}" r="3.2" fill="#f6c8d8"/>`).join("")}<circle cx="0" cy="-88" r="3.5" fill="#fde3ec"/>`;
 }
 const SLOTS=[6,-6,12,-12,18,-18,21,-21];
+const SLOT_RING=[0,1,1,0,0,1,1,0];
 function drawGarden(){
   const svg=document.getElementById('gardenSvg');
   const counts={};
@@ -674,13 +817,17 @@ function drawGarden(){
     </g></g>`).join("");
   const trees=people.map((p,i)=>{
     counts[p.section]=(counts[p.section]||0);
-    const ang=p.section*45+SLOTS[counts[p.section]%SLOTS.length];
+    const slotIdx=counts[p.section]%SLOTS.length;
+    const ang=p.section*45+SLOTS[slotIdx];
     counts[p.section]++;
-    return `<g transform="rotate(${ang} ${CX} ${CY})"><g class="tree-g" data-i="${i}" transform="translate(${CX} ${CY-RR})">
+    /* alternate neighbours onto two rings + stagger label height so names never overlap or read together */
+    const ringOff=SLOT_RING[slotIdx]*58;
+    const lblY=20+SLOT_RING[slotIdx]*10;
+    return `<g transform="rotate(${ang} ${CX} ${CY})"><g class="tree-g" data-i="${i}" transform="translate(${CX} ${CY-RR+ringOff})">
       <circle cy="-26" r="30" fill="transparent"/>
-      <g class="sway" style="animation-delay:${(i%7)*0.8}s"><g transform="scale(.8)">${treeArt(p.stage)}</g></g>
+      <g class="sway" style="animation-delay:${(i%7)*0.8}s"><g transform="scale(1.2)">${treeArt(p.stage)}</g></g>
       ${p.stage===4?'<text y="-82" text-anchor="middle" font-size="13">🕊️</text>':''}
-      <text class="tree-label" y="20">${p.name}</text>
+      <text class="tree-label" y="${lblY}">${p.name}</text>
     </g></g>`;
   }).join("");
   svg.innerHTML=`<g id="rotG" transform="rotate(${rot} ${CX} ${CY})">
@@ -692,13 +839,21 @@ function drawGarden(){
 }
 function topSection(){return ((Math.round(-rot/45)%8)+8)%8}
 function updateSecUI(){
-  const k=topSection(), s=SECTIONS[k];
-  document.getElementById('secLabel').textContent=`${s.e} ${s.n} — ${s.d}`;
+  const k=topSection();
   document.getElementById('sunset').style.opacity=k===7?1:0;
   document.querySelectorAll('#secJump button').forEach((b,i)=>b.classList.toggle('on',i===k));
+  updateGardenProgress(k);
 }
+function updateGardenProgress(k){
+  const total=people.length;
+  const bloom=people.filter(p=>p.stage>=4).length;
+  const growing=people.filter(p=>p.stage>1&&p.stage<4).length;
+  const el=document.getElementById('gardenProgress');
+  if(el)el.innerHTML=`${SECTIONS[k].e} <b style="color:var(--gold)">${SECTIONS[k].n}</b> · ${total} planted · ${growing} growing · ${bloom} in bloom`;
+}
+function selectPath(k){goSection(k)}
 function applyRot(){const g=document.getElementById('rotG');if(g)g.setAttribute('transform',`rotate(${rot} ${CX} ${CY})`);updateSecUI()}
-document.getElementById('secJump').innerHTML=SECTIONS.map((s,i)=>`<button onclick="goSection(${i})" title="${s.n}">${s.e}</button>`).join("");
+document.getElementById('secJump').innerHTML=SECTIONS.map((s,i)=>`<button onclick="selectPath(${i})" title="${s.n}"><span class="pe">${s.e}</span><span class="pn">${s.n}</span></button>`).join("");
 function goSection(k){
   let t=-k*45;
   while(t-rot>180)t-=360; while(t-rot<-180)t+=360;
@@ -732,16 +887,114 @@ function stepSection(d){const N=SECTIONS.length;goSection((curSectionIdx()+d+N)%
 })();
 function openTree(i){cur=i;show('treeView')}
 function openPerson(i){cur=i;show('path')}
+/* ============ first-visit garden tutorial (spotlight + real zoom) ============ */
+let tutActive=false, tutStep=0;
+function tutGrownIndex(){let bi=0,bs=-1;people.forEach((p,i)=>{if(p.stage>bs){bs=p.stage;bi=i}});return bi}
+function clearHalo(){const h=document.getElementById('tutHalo');if(h)h.style.display='none'}
+function tutToGarden(){if(document.querySelector('.screen.active').id!=='garden')show('garden');clearHalo()}
+function zoomGrown(){const i=tutGrownIndex();cur=i;goSection(people[i].section);setTimeout(()=>{if(tutActive)show('treeView')},620);}
+const TUT=[
+ {cap:`<b>Welcome to your garden.</b><br>Everyone you choose to forgive takes root here — and grows as you do.`,act:tutToGarden},
+ {cap:`Turn the world with a finger. Each grove is a different corner of your life — and the bar below jumps you there.`,act:()=>{tutToGarden();goSection(2)}},
+ {cap:`Wander far enough and you reach the place where you lay your losses down — even the sky learns to soften there.`,act:()=>{tutToGarden();goSection(7)}},
+ {cap:`Step inside a tree. A seed becomes a sprout, a sprout a sapling — and one day it blooms, and a dove comes to rest in its branches.`,act:zoomGrown},
+ {cap:`Begin wherever your heart feels lightest. The garden is patient. It will wait for you.`,act:tutToGarden}
+];
+function runTut(){
+  const t=TUT[tutStep];
+  document.getElementById('tutCap').innerHTML=t.cap;
+  document.getElementById('tutDots').innerHTML=TUT.map((_,k)=>`<i class="${k===tutStep?'on':''}"></i>`).join("");
+  document.getElementById('tutNext').textContent=tutStep===TUT.length-1?'Enter my garden ✨':'Next';
+  if(t.act)t.act();
+}
+function tutNext(){tutStep++;if(tutStep>=TUT.length){endTutorial();return}runTut()}
+function endTutorial(){
+  try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
+  clearHalo();
+  document.getElementById('tutorial').classList.remove('on');
+  if(document.querySelector('.screen.active').id!=='garden')show('garden');
+  tutActive=false;
+}
+function maybeTutorial(){
+  if(tutActive)return;
+  let seen=false;try{seen=localStorage.getItem('olive_tutorial_v1')}catch(e){}
+  if(seen)return;
+  tutActive=true;tutStep=0;
+  setTimeout(()=>{document.getElementById('tutorial').classList.add('on');runTut()},700);
+}
+/* ============ Forgiveness Cloud ============ */
+const CLOUD_PHRASES=["a broken promise","a friend who drifted away","being left out","a harsh word said in haste","an apology that never came","being ghosted","a forgotten birthday","feeling unseen","a canceled plan","a dismissive comment","being judged","a small betrayal","a call never returned","being talked over","a cold goodbye","feeling compared to others","an old grudge","being misunderstood","a joke at your expense","a friendship that faded","being last to know","feeling taken for granted","a door closed too soon","words you never got to say"];
+let cloudRAF=null, cloudB=[], cloudPtr={x:-999,y:-999}, cloudDrag=null, cloudFieldEl=null;
+function openCloud(){ show('cloud'); requestAnimationFrame(()=>buildCloud()); }
+function buildCloud(){
+  const f=document.getElementById('cloudField'); cloudFieldEl=f; f.innerHTML=''; cloudB=[];
+  const W=f.clientWidth||360, H=f.clientHeight||500, cols=3, rows=Math.ceil(CLOUD_PHRASES.length/cols);
+  CLOUD_PHRASES.forEach((t,i)=>{
+    const el=document.createElement('div'); el.className='cloud-bubble'; el.textContent=t; f.appendChild(el);
+    const bw=el.offsetWidth, bh=el.offsetHeight;
+    const gx=(i%cols+0.5)/cols*W, gy=(Math.floor(i/cols)+0.5)/rows*H;
+    const b={el,bw,bh,
+      x:Math.max(4,Math.min(W-bw-4, gx-bw/2+(Math.random()-.5)*36)),
+      y:Math.max(4,Math.min(H-bh-4, gy-bh/2+(Math.random()-.5)*26)),
+      vx:(Math.random()-.5)*.5, vy:(Math.random()-.5)*.5};
+    cloudB.push(b); el.style.transform=`translate(${b.x}px,${b.y}px)`;
+    el.addEventListener('pointerdown',e=>cloudGrab(e,b));
+  });
+  f.onpointermove=cloudMove; f.onpointerup=cloudUp; f.onpointercancel=cloudUp;
+  f.onpointerleave=()=>{cloudPtr.x=cloudPtr.y=-999;};
+  if(cloudRAF)cancelAnimationFrame(cloudRAF); cloudLoop();
+}
+function cloudPt(e){const r=cloudFieldEl.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
+function cloudGrab(e,b){e.stopPropagation();cloudDrag=b;b.el.classList.add('grab');
+  const [px,py]=cloudPt(e); b._ox=px-b.x; b._oy=py-b.y; b._sx=px; b._sy=py;
+  cloudFieldEl.setPointerCapture&&cloudFieldEl.setPointerCapture(e.pointerId);}
+function cloudMove(e){const [px,py]=cloudPt(e); cloudPtr.x=px; cloudPtr.y=py;
+  if(cloudDrag){cloudDrag.x=px-cloudDrag._ox; cloudDrag.y=py-cloudDrag._oy; cloudDrag.vx=0; cloudDrag.vy=0;}}
+function cloudUp(e){
+  if(cloudDrag){const b=cloudDrag,[px,py]=cloudPt(e); b.el.classList.remove('grab'); cloudDrag=null;
+    if(Math.hypot(px-b._sx,py-b._sy)<6){chooseCloud(b.el.textContent);} }
+}
+function cloudLoop(){
+  const f=cloudFieldEl;
+  if(!f||document.querySelector('.screen.active').id!=='cloud'){cloudRAF=null;return;}
+  const W=f.clientWidth, H=f.clientHeight;
+  for(let i=0;i<cloudB.length;i++){
+    const b=cloudB[i];
+    if(b===cloudDrag){b.el.style.transform=`translate(${b.x}px,${b.y}px)`;continue;}
+    b.vx+=(Math.random()-.5)*.04; b.vy+=(Math.random()-.5)*.04;
+    if(cloudPtr.x>-900){const dx=b.x+b.bw/2-cloudPtr.x, dy=b.y+b.bh/2-cloudPtr.y, d=Math.hypot(dx,dy);
+      if(d<95&&d>.1){const fp=(1-d/95)*1.2; b.vx+=dx/d*fp; b.vy+=dy/d*fp;}}
+    for(let j=0;j<cloudB.length;j++){ if(j===i)continue; const o=cloudB[j];
+      const ox=(b.x+b.bw/2)-(o.x+o.bw/2), oy=(b.y+b.bh/2)-(o.y+o.bh/2);
+      const mnx=(b.bw+o.bw)/2+8, mny=(b.bh+o.bh)/2+5;
+      if(Math.abs(ox)<mnx&&Math.abs(oy)<mny){const d=Math.hypot(ox,oy)||.1; b.vx+=ox/d*.28; b.vy+=oy/d*.28;}}
+    b.vx*=.93; b.vy*=.93;
+    const sp=Math.hypot(b.vx,b.vy); if(sp>2.4){b.vx*=2.4/sp; b.vy*=2.4/sp;}
+    b.x+=b.vx; b.y+=b.vy;
+    if(b.x<2){b.x=2;b.vx=Math.abs(b.vx)*.6;} if(b.x>W-b.bw-2){b.x=W-b.bw-2;b.vx=-Math.abs(b.vx)*.6;}
+    if(b.y<2){b.y=2;b.vy=Math.abs(b.vy)*.6;} if(b.y>H-b.bh-2){b.y=H-b.bh-2;b.vy=-Math.abs(b.vy)*.6;}
+    b.el.style.transform=`translate(${b.x}px,${b.y}px)`;
+  }
+  cloudRAF=requestAnimationFrame(cloudLoop);
+}
+function chooseCloud(txt){
+  people.push(mk(txt,3,1,[],[]));
+  save();
+  cur=people.length-1;
+  show('path');
+  toast('Added to your list — tend it when you’re ready 🌱');
+}
 function addPerson(){
   const n=document.getElementById('addName').value.trim();
   if(!n)return;
   people.push(mk(n,addSection,1,[],[]));
   document.getElementById('addName').value='';
+  save();
   closeModals();goSection(addSection);drawGarden();toast(`A seed for ${n} 🌱`)
 }
 /* dove flyover — rare (every 5 minutes) */
 function flyDove(){const d=document.getElementById('dove');d.classList.remove('fly');void d.offsetWidth;d.classList.add('fly')}
-setTimeout(()=>{flyDove();setInterval(flyDove,300000)},30000);
+setTimeout(()=>{flyDove();setInterval(flyDove,90000)},30000);
 
 /* ============ tree view (zoom) ============ */
 const BRANCHES=[
@@ -814,7 +1067,10 @@ function drawPath(){
       <div class="dot">${done?'✓':s.icon}</div>
       <div><h4>${s.t}${s.opt?'<span class="optional">OPTIONAL</span>':''}</h4><p>${s.d}</p></div>
     </div>`}).join("");
+  const nw=document.getElementById('notesWrap');
+  if(nw)nw.innerHTML=`<h4 class="notes-h">My private notes</h4><p class="notes-sub">For your eyes only — anything you want to remember about ${p.name}.</p><textarea id="pNotes" rows="4" placeholder="Write freely…" oninput="saveNote(this.value)">${(p.notes||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>`;
 }
+function saveNote(v){if(people[cur]){people[cur].notes=v;save();}}
 const EX={
  learn:`<h3 class="serif">What forgiveness is — and isn't</h3>
   <p><b>Forgiveness is not</b> excusing what happened, pretending it didn't hurt, forgetting, or reconciling. You can forgive someone you never speak to again. You can forgive someone who isn't sorry.</p>
@@ -857,6 +1113,7 @@ function completeStep(i){
     p.done.push(i);
     const req=p.done.filter(d=>!STEPS[d].opt).length;
     p.stage=req>=5?4:req>=3?3:req>=1?2:1;
+    save();
     pending=i;
     openCheckin(i); /* willingness check between every step */
   }else drawPath();
@@ -891,6 +1148,7 @@ function afterCheckin(){
     if(!unlocked.includes(qi))unlocked.push(qi);
     showUnlock(pending,qi);pending=null;
   }
+  save();
   drawPath();
 }
 
@@ -900,6 +1158,7 @@ function quickAdd(){
   if(!n)return;
   people.push(mk(n,qaSection,1,[],[]));
   document.getElementById('qaName').value='';
+  save();
   drawList();toast(`${n} added — a seed is planted 🌱`)
 }
 function drawList(){
@@ -947,6 +1206,14 @@ function closeModals(){document.querySelectorAll('.modal').forEach(m=>m.classLis
 document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity=1;t.style.transform='translateX(-50%) translateY(0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translateX(-50%) translateY(20px)'},2600)}
 for(let i=0;i<7;i++){const f=document.createElement('div');f.className='firefly';f.style.left=(10+Math.random()*80)+'%';f.style.bottom=(15+Math.random()*30)+'%';f.style.animationDelay=Math.random()*6+'s';document.querySelector('#garden .sky').appendChild(f)}
+
+/* restore saved progress — skip onboarding if the tester has been here before */
+if(load()){
+  cur=0;
+  document.getElementById('onboard').classList.remove('active');
+  document.getElementById('mainNav').style.display='flex';
+  show('garden');
+}
 drawGarden();
 
 /* ============ interactive star field (every screen) ============ */
@@ -986,7 +1253,7 @@ drawGarden();
   function darkScreen(){
     if(document.getElementById('unlock').classList.contains('open'))return true;
     const a=document.querySelector('.screen.active');
-    return a&&(a.id==='onboard'||a.id==='garden'||a.id==='treeView');
+    return a&&(a.id==='onboard'||a.id==='garden'||a.id==='treeView'||a.id==='cloud');
   }
   let t=0;
   (function loop(){
