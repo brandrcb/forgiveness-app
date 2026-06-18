@@ -63,12 +63,12 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .forgive-quote .fq{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.45;color:#fff}
 .forgive-quote .fa{margin-top:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 /* ---------- first-visit garden tutorial ---------- */
-#tutorial{position:absolute;inset:0;z-index:45;display:none}
+#tutorial{position:absolute;inset:0;z-index:45;display:none;pointer-events:none}
 #tutorial.on{display:block}
-#tutScrim{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,transparent 24%,rgba(8,16,28,.5) 78%);animation:fadeUp .6s ease}
+#tutScrim{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,transparent 44%,rgba(8,16,28,.4) 96%);pointer-events:none;animation:fadeUp .6s ease}
 #tutHalo{position:absolute;width:104px;height:104px;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 28px 8px rgba(232,200,120,.5),inset 0 0 18px rgba(232,200,120,.35);display:none;z-index:46;pointer-events:none;animation:haloPulse 1.9s ease-in-out infinite}
 @keyframes haloPulse{0%,100%{transform:scale(.9);opacity:.65}50%{transform:scale(1.1);opacity:1}}
-#tutCard{position:absolute;left:18px;right:18px;bottom:92px;z-index:47;background:rgba(15,27,45,.93);border:1px solid rgba(232,200,120,.42);border-radius:24px;padding:22px 22px 18px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.55);animation:fadeUp .5s ease}
+#tutCard{position:absolute;left:18px;right:18px;bottom:104px;z-index:47;pointer-events:auto;background:rgba(15,27,45,.93);border:1px solid rgba(232,200,120,.42);border-radius:24px;padding:22px 22px 18px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.55);animation:fadeUp .5s ease}
 #tutCap{font-family:var(--serif);font-style:italic;font-size:18.5px;line-height:1.5;color:#f3ece0;min-height:84px;display:flex;align-items:center;justify-content:center}
 #tutCap b{font-style:normal;font-family:var(--sans);font-weight:700;color:var(--gold);font-size:15px;letter-spacing:.02em}
 .tut-dots{display:flex;gap:6px;justify-content:center;margin:12px 0 14px}
@@ -78,6 +78,28 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .tut-row button{font-family:var(--sans);cursor:pointer;border-radius:14px;padding:11px 22px;font-size:14px;font-weight:600;border:none}
 #tutNext{background:linear-gradient(135deg,#d4a94e,#e8c878);color:#5a4310}
 #tutSkip{background:transparent;color:#9fb4c7;border:1px solid rgba(255,255,255,.22)}
+/* ---------- Garden Paths bar ---------- */
+.paths-bar{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:7px 8px calc(9px + env(safe-area-inset-bottom));background:rgba(13,23,37,.5);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);border-top:1px solid rgba(232,200,120,.28)}
+.paths-title{text-align:center;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(232,200,120,.85);margin-bottom:5px;font-weight:700}
+.paths-row{display:flex;gap:3px;justify-content:space-between}
+.paths-row button{flex:1 1 0;min-width:0;height:46px;border:none;background:transparent;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .22s,background .22s,opacity .22s,filter .22s;filter:grayscale(.45);opacity:.6}
+.paths-row button .pe{font-size:19px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.paths-row button .pn{font-size:7.5px;letter-spacing:.02em;color:rgba(255,255,255,.72);text-transform:uppercase;white-space:nowrap}
+.paths-row button.on{background:rgba(232,200,120,.2);filter:none;opacity:1;transform:translateY(-3px);box-shadow:0 5px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.15)}
+#gardenProgress b{font-weight:700}
+
+/* ---------- Forgiveness Cloud ---------- */
+.cloud-q{position:absolute;right:18px;top:46px;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(232,200,120,.6);background:rgba(232,200,120,.16);color:var(--gold);font-size:24px;font-family:var(--serif);font-weight:600;cursor:pointer;transition:transform .2s,background .2s;z-index:3}
+.cloud-q:hover{transform:scale(1.09);background:rgba(232,200,120,.28)}
+#cloud{background:radial-gradient(circle at 50% 28%,#21384f,#0c1a2b 82%);color:#fff}
+.cloud-head{padding:46px 24px 6px;text-align:center;position:relative;z-index:3}
+.cloud-head h2{font-size:25px;font-weight:500}
+.cloud-head p{font-size:13px;color:#cdd9e4;margin-top:4px;font-style:italic;font-family:var(--serif);line-height:1.5}
+#cloudField{position:absolute;inset:118px 0 58px;overflow:hidden}
+.cloud-bubble{position:absolute;padding:9px 15px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(232,200,120,.3);color:#f3ece0;font-size:13.5px;font-family:var(--serif);font-style:italic;white-space:nowrap;cursor:pointer;animation:cloudDrift var(--d) ease-in-out infinite;transition:background .2s,transform .2s,border-color .2s;will-change:transform}
+.cloud-bubble:hover,.cloud-bubble:active{background:rgba(232,200,120,.3);border-color:var(--gold);transform:scale(1.07);z-index:5}
+@keyframes cloudDrift{0%,100%{transform:translate(0,0)}25%{transform:translate(11px,-15px)}50%{transform:translate(-9px,9px)}75%{transform:translate(7px,13px)}}
+.cloud-foot{position:absolute;left:0;right:0;bottom:0;padding:13px 20px calc(13px + env(safe-area-inset-bottom));text-align:center;font-size:11.5px;color:#9fb1c3;background:linear-gradient(0deg,rgba(12,26,43,.92),transparent)}
 
 /* section chips */
 .chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0}
@@ -102,9 +124,9 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .tree-label{font-family:var(--sans);font-size:10.5px;fill:#fdf8ec;text-anchor:middle;letter-spacing:.04em;pointer-events:none;paint-order:stroke;stroke:rgba(8,18,28,.55);stroke-width:2.6px;stroke-linejoin:round}
 .sway{animation:sway 6s ease-in-out infinite;transform-origin:bottom center}
 @keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
-.add-seed{position:absolute;bottom:96px;right:18px;width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3;transition:transform .2s}
+.add-seed{position:absolute;bottom:122px;right:18px;width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3;transition:transform .2s}
 .add-seed:hover{transform:scale(1.08)}
-.tips-bulb{position:absolute;bottom:96px;left:18px;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.35);border:1px solid rgba(232,200,120,.5);font-size:19px;z-index:3;cursor:pointer;transition:transform .2s}
+.tips-bulb{position:absolute;bottom:122px;left:18px;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.35);border:1px solid rgba(232,200,120,.5);font-size:19px;z-index:3;cursor:pointer;transition:transform .2s}
 .tips-bulb:hover{transform:scale(1.1)}
 .sec-jump{position:absolute;bottom:84px;left:70px;right:74px;display:flex;justify-content:center;gap:5px;z-index:3}
 .sec-jump button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);font-size:14px;cursor:pointer;transition:all .25s}
@@ -133,7 +155,7 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 
 /* ---------- nav ---------- */
 .nav{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(250,247,238,.96);backdrop-filter:blur(8px);display:flex;border-top:1px solid #e6dec9;z-index:10}
-.nav button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:9.5px;color:#8c9aa8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-bottom:8px}
+.nav button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:9.5px;color:#39434f;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-bottom:8px}
 .nav button .ico{font-size:19px;width:42px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:13px;background:#efe7d4;box-shadow:0 2px 5px rgba(40,60,80,.2),inset 0 1px 0 rgba(255,255,255,.6);filter:grayscale(.5) drop-shadow(0 1px 1px rgba(0,0,0,.28));opacity:.78;transition:all .25s}
 .nav button.on{color:var(--leaf-dark);font-weight:700}
 .nav button.on .ico{filter:none drop-shadow(0 2px 3px rgba(0,0,0,.25));opacity:1;background:linear-gradient(135deg,#e6f1dd,#cfe6c0);box-shadow:0 5px 12px rgba(74,124,89,.35),inset 0 1px 0 rgba(255,255,255,.7);transform:translateY(-3px)}
@@ -312,14 +334,27 @@ input:focus,textarea:focus{border-color:var(--leaf)}
       <div id="dove">🕊️</div>
       <div class="garden-head">
         <h2 class="serif">Your Garden</h2>
-        <p>Drag the globe to wander. Tap a tree to visit it.</p>
-        <div id="secLabel">🏡 Family</div>
+        <p id="gardenProgress">Your garden is taking root.</p>
       </div>
       <svg id="gardenSvg" viewBox="0 0 390 608" preserveAspectRatio="xMidYMax slice"></svg>
-      <div class="sec-jump" id="secJump"></div>
+      <div class="paths-bar">
+        <div class="paths-title">Garden Paths</div>
+        <div class="paths-row" id="secJump"></div>
+      </div>
       <button class="tips-bulb" onclick="show('tips')" title="Tips">💡</button>
       <button class="add-seed" onclick="openModal('mAdd')" title="Plant a new seed">＋</button>
     </div>
+  </div>
+
+  <!-- ================= FORGIVENESS CLOUD ================= -->
+  <div class="screen" id="cloud">
+    <div class="cloud-head">
+      <span class="backchip" onclick="show('list')">← List</span>
+      <h2 class="serif">The Forgiveness Cloud</h2>
+      <p>moves with you and shows you things you may want to examine more closely.</p>
+    </div>
+    <div id="cloudField"></div>
+    <div class="cloud-foot">Tap a thought that stirs something — it joins your list, ready whenever you are.</div>
   </div>
 
   <!-- ================= TREE VIEW (zoom) ================= -->
@@ -356,7 +391,7 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 
   <!-- ================= LIST ================= -->
   <div class="screen" id="list">
-    <div class="head"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p></div>
+    <div class="head"><h2 class="serif">My Forgiveness List</h2><p>Everyone you want to forgive, in one place. Each name plants a tree.</p><button class="cloud-q" onclick="openCloud()" title="Forgiveness Cloud">?</button></div>
     <div class="scroll">
       <div class="quickadd">
         <input type="text" id="qaName" placeholder="Add a name…" maxlength="30" onkeydown="if(event.key==='Enter')quickAdd()">
@@ -596,6 +631,8 @@ let people=[
  mk("Maya",1,2,[0],[{f:4,note:""}]),
  mk("Old roommate",1,1,[],[]),
  mk("J.T.",1,1,[],[]),
+ mk("Being ghosted",1,1,[],[]),
+ mk("Betrayed",1,1,[],[]),
  /* Work */
  mk("M.K.",2,1,[],[{f:0,note:""}],"Took credit for two years of my work."),
  mk("The boss",2,1,[],[]),
@@ -604,6 +641,8 @@ let people=[
  mk("The neighbor",3,1,[],[]),
  mk("The stranger",3,2,[0],[{f:2,note:""}]),
  mk("Myself",3,1,[],[]),
+ mk("Being judged",3,1,[],[]),
+ mk("Scammed",3,1,[],[]),
  /* Faith */
  mk("Pastor R.",4,1,[],[]),
  mk("The church",4,1,[],[]),
@@ -612,6 +651,7 @@ let people=[
  mk("The bully",5,2,[0],[{f:2,note:""}]),
  mk("Coach",5,1,[],[]),
  mk("Mrs. T.",5,1,[],[]),
+ mk("Bullied",5,1,[],[]),
  /* Love */
  mk("Em",6,2,[0],[{f:2,note:""}],"Left without a word."),
  mk("First love",6,1,[],[]),
@@ -738,7 +778,7 @@ function show(id){
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.nav));
 
 /* ============ garden globe ============ */
-const CX=195,CY=900,RR=520;
+const CX=195,CY=1080,RR=840;
 let rot=0, rotTarget=null;
 function treeArt(s){
   if(s===1)return `<ellipse cx="0" cy="-4" rx="9" ry="5" fill="#5a4632"/><path d="M0,-6 Q-1,-16 -6,-20 M0,-6 Q1,-14 5,-18" stroke="#7fb069" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
@@ -747,6 +787,7 @@ function treeArt(s){
   return `<rect x="-3.5" y="-58" width="7" height="58" rx="3" fill="#6b5138"/><circle cx="0" cy="-70" r="25" fill="#5e8c54"/><circle cx="-18" cy="-56" r="14" fill="#6da25f"/><circle cx="18" cy="-58" r="14" fill="#6da25f"/>${[...Array(7)].map((_,k)=>`<circle cx="${-18+k*6}" cy="${-78+(k%3)*12}" r="3.2" fill="#f6c8d8"/>`).join("")}<circle cx="0" cy="-88" r="3.5" fill="#fde3ec"/>`;
 }
 const SLOTS=[6,-6,12,-12,18,-18,21,-21];
+const SLOT_RING=[0,1,1,0,0,1,1,0];
 function drawGarden(){
   const svg=document.getElementById('gardenSvg');
   const counts={};
@@ -766,11 +807,11 @@ function drawGarden(){
     const ang=p.section*45+SLOTS[slotIdx];
     counts[p.section]++;
     /* alternate neighbours onto two rings + stagger label height so names never overlap or read together */
-    const ringOff=(slotIdx%2)*40;
-    const lblY=20+(slotIdx%2)*9;
+    const ringOff=SLOT_RING[slotIdx]*58;
+    const lblY=20+SLOT_RING[slotIdx]*10;
     return `<g transform="rotate(${ang} ${CX} ${CY})"><g class="tree-g" data-i="${i}" transform="translate(${CX} ${CY-RR+ringOff})">
       <circle cy="-26" r="30" fill="transparent"/>
-      <g class="sway" style="animation-delay:${(i%7)*0.8}s"><g transform="scale(.8)">${treeArt(p.stage)}</g></g>
+      <g class="sway" style="animation-delay:${(i%7)*0.8}s"><g transform="scale(1.2)">${treeArt(p.stage)}</g></g>
       ${p.stage===4?'<text y="-82" text-anchor="middle" font-size="13">🕊️</text>':''}
       <text class="tree-label" y="${lblY}">${p.name}</text>
     </g></g>`;
@@ -784,13 +825,21 @@ function drawGarden(){
 }
 function topSection(){return ((Math.round(-rot/45)%8)+8)%8}
 function updateSecUI(){
-  const k=topSection(), s=SECTIONS[k];
-  document.getElementById('secLabel').textContent=`${s.e} ${s.n} — ${s.d}`;
+  const k=topSection();
   document.getElementById('sunset').style.opacity=k===7?1:0;
   document.querySelectorAll('#secJump button').forEach((b,i)=>b.classList.toggle('on',i===k));
+  updateGardenProgress(k);
 }
+function updateGardenProgress(k){
+  const total=people.length;
+  const bloom=people.filter(p=>p.stage>=4).length;
+  const growing=people.filter(p=>p.stage>1&&p.stage<4).length;
+  const el=document.getElementById('gardenProgress');
+  if(el)el.innerHTML=`${SECTIONS[k].e} <b style="color:var(--gold)">${SECTIONS[k].n}</b> · ${total} planted · ${growing} growing · ${bloom} in bloom`;
+}
+function selectPath(k){goSection(k)}
 function applyRot(){const g=document.getElementById('rotG');if(g)g.setAttribute('transform',`rotate(${rot} ${CX} ${CY})`);updateSecUI()}
-document.getElementById('secJump').innerHTML=SECTIONS.map((s,i)=>`<button onclick="goSection(${i})" title="${s.n}">${s.e}</button>`).join("");
+document.getElementById('secJump').innerHTML=SECTIONS.map((s,i)=>`<button onclick="selectPath(${i})" title="${s.n}"><span class="pe">${s.e}</span><span class="pn">${s.n}</span></button>`).join("");
 function goSection(k){
   let t=-k*45;
   while(t-rot>180)t-=360; while(t-rot<-180)t+=360;
@@ -822,31 +871,19 @@ function goSection(k){
 })();
 function openTree(i){cur=i;show('treeView')}
 function openPerson(i){cur=i;show('path')}
-/* ============ first-visit garden tutorial ============ */
+/* ============ first-visit garden tutorial (spotlight + real zoom) ============ */
+let tutActive=false, tutStep=0;
 function tutGrownIndex(){let bi=0,bs=-1;people.forEach((p,i)=>{if(p.stage>bs){bs=p.stage;bi=i}});return bi}
 function clearHalo(){const h=document.getElementById('tutHalo');if(h)h.style.display='none'}
-function highlightGrown(){
-  const i=tutGrownIndex();
-  goSection(people[i].section);
-  setTimeout(()=>{
-    const el=document.querySelector(`.tree-g[data-i="${i}"]`);
-    const h=document.getElementById('tutHalo');
-    if(!el||!h)return;
-    const pr=document.getElementById('phone').getBoundingClientRect();
-    const r=el.getBoundingClientRect();
-    h.style.left=(r.left+r.width/2-pr.left-52)+'px';
-    h.style.top=(r.top+r.height/2-pr.top-58)+'px';
-    h.style.display='block';
-  },1000);
-}
+function tutToGarden(){if(document.querySelector('.screen.active').id!=='garden')show('garden');clearHalo()}
+function zoomGrown(){const i=tutGrownIndex();cur=i;goSection(people[i].section);setTimeout(()=>{if(tutActive)show('treeView')},620);}
 const TUT=[
- {cap:`<b>Welcome to your garden.</b><br>Everyone you choose to forgive takes root here — and grows as you do.`,act:clearHalo},
- {cap:`Let the world turn. Each grove holds a different corner of your life — family, friends, the ones you've worked beside.`,act:()=>goSection(2)},
- {cap:`Wander far enough and you reach the place where you lay your losses down. Even the sky learns to soften there.`,act:()=>goSection(7)},
- {cap:`This tree has been tended. A seed becomes a sprout, a sprout a sapling — and one day it blooms, and a dove comes to rest in its branches.`,act:highlightGrown},
- {cap:`Begin wherever your heart feels lightest. The garden is patient. It will wait for you.`,act:clearHalo}
+ {cap:`<b>Welcome to your garden.</b><br>Everyone you choose to forgive takes root here — and grows as you do.`,act:tutToGarden},
+ {cap:`Turn the world with a finger. Each grove is a different corner of your life — and the bar below jumps you there.`,act:()=>{tutToGarden();goSection(2)}},
+ {cap:`Wander far enough and you reach the place where you lay your losses down — even the sky learns to soften there.`,act:()=>{tutToGarden();goSection(7)}},
+ {cap:`Step inside a tree. A seed becomes a sprout, a sprout a sapling — and one day it blooms, and a dove comes to rest in its branches.`,act:zoomGrown},
+ {cap:`Begin wherever your heart feels lightest. The garden is patient. It will wait for you.`,act:tutToGarden}
 ];
-let tutStep=0;
 function runTut(){
   const t=TUT[tutStep];
   document.getElementById('tutCap').innerHTML=t.cap;
@@ -856,15 +893,35 @@ function runTut(){
 }
 function tutNext(){tutStep++;if(tutStep>=TUT.length){endTutorial();return}runTut()}
 function endTutorial(){
+  try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
   clearHalo();
   document.getElementById('tutorial').classList.remove('on');
-  try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
+  if(document.querySelector('.screen.active').id!=='garden')show('garden');
+  tutActive=false;
 }
 function maybeTutorial(){
+  if(tutActive)return;
   let seen=false;try{seen=localStorage.getItem('olive_tutorial_v1')}catch(e){}
   if(seen)return;
-  tutStep=0;
+  tutActive=true;tutStep=0;
   setTimeout(()=>{document.getElementById('tutorial').classList.add('on');runTut()},700);
+}
+/* ============ Forgiveness Cloud ============ */
+const CLOUD_PHRASES=["a broken promise","a friend who drifted away","being left out","a harsh word said in haste","an apology that never came","being ghosted","a forgotten birthday","feeling unseen","a canceled plan","a dismissive comment","being judged","a small betrayal","a call never returned","being talked over","a cold goodbye","feeling compared to others","an old grudge","being misunderstood","a joke at your expense","a friendship that faded","being last to know","feeling taken for granted","a door closed too soon","words you never got to say"];
+function openCloud(){
+  const f=document.getElementById('cloudField');
+  f.innerHTML=CLOUD_PHRASES.map(t=>{
+    const x=(6+Math.random()*62).toFixed(1), y=(2+Math.random()*88).toFixed(1), d=(9+Math.random()*8).toFixed(1), delay=(-Math.random()*8).toFixed(1);
+    return `<div class="cloud-bubble" style="left:${x}%;top:${y}%;--d:${d}s;animation-delay:${delay}s" onclick="chooseCloud(this.textContent)">${t}</div>`;
+  }).join("");
+  show('cloud');
+}
+function chooseCloud(txt){
+  people.push(mk(txt,3,1,[],[]));
+  save();
+  cur=people.length-1;
+  show('path');
+  toast('Added to your list — tend it when you’re ready 🌱');
 }
 function addPerson(){
   const n=document.getElementById('addName').value.trim();
@@ -876,7 +933,7 @@ function addPerson(){
 }
 /* dove flyover — rare (every 5 minutes) */
 function flyDove(){const d=document.getElementById('dove');d.classList.remove('fly');void d.offsetWidth;d.classList.add('fly')}
-setTimeout(()=>{flyDove();setInterval(flyDove,300000)},30000);
+setTimeout(()=>{flyDove();setInterval(flyDove,90000)},30000);
 
 /* ============ tree view (zoom) ============ */
 const BRANCHES=[
