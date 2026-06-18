@@ -62,6 +62,22 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .forgive-quote.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .forgive-quote .fq{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.45;color:#fff}
 .forgive-quote .fa{margin-top:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+/* ---------- first-visit garden tutorial ---------- */
+#tutorial{position:absolute;inset:0;z-index:45;display:none}
+#tutorial.on{display:block}
+#tutScrim{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,transparent 24%,rgba(8,16,28,.5) 78%);animation:fadeUp .6s ease}
+#tutHalo{position:absolute;width:104px;height:104px;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 28px 8px rgba(232,200,120,.5),inset 0 0 18px rgba(232,200,120,.35);display:none;z-index:46;pointer-events:none;animation:haloPulse 1.9s ease-in-out infinite}
+@keyframes haloPulse{0%,100%{transform:scale(.9);opacity:.65}50%{transform:scale(1.1);opacity:1}}
+#tutCard{position:absolute;left:18px;right:18px;bottom:92px;z-index:47;background:rgba(15,27,45,.93);border:1px solid rgba(232,200,120,.42);border-radius:24px;padding:22px 22px 18px;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.55);animation:fadeUp .5s ease}
+#tutCap{font-family:var(--serif);font-style:italic;font-size:18.5px;line-height:1.5;color:#f3ece0;min-height:84px;display:flex;align-items:center;justify-content:center}
+#tutCap b{font-style:normal;font-family:var(--sans);font-weight:700;color:var(--gold);font-size:15px;letter-spacing:.02em}
+.tut-dots{display:flex;gap:6px;justify-content:center;margin:12px 0 14px}
+.tut-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
+.tut-dots i.on{background:var(--gold)}
+.tut-row{display:flex;gap:10px;justify-content:center}
+.tut-row button{font-family:var(--sans);cursor:pointer;border-radius:14px;padding:11px 22px;font-size:14px;font-weight:600;border:none}
+#tutNext{background:linear-gradient(135deg,#d4a94e,#e8c878);color:#5a4310}
+#tutSkip{background:transparent;color:#9fb4c7;border:1px solid rgba(255,255,255,.22)}
 
 /* section chips */
 .chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0}
@@ -83,7 +99,7 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .garden-head p{font-size:12.5px;color:#cfd9d4;margin-top:4px}
 #secLabel{margin-top:8px;display:inline-block;background:rgba(0,0,0,.28);border:1px solid rgba(232,200,120,.4);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--gold);transition:all .3s}
 .tree-g{cursor:pointer}
-.tree-label{font-family:var(--sans);font-size:10.5px;fill:#fdf8ec;text-anchor:middle;letter-spacing:.04em;pointer-events:none}
+.tree-label{font-family:var(--sans);font-size:10.5px;fill:#fdf8ec;text-anchor:middle;letter-spacing:.04em;pointer-events:none;paint-order:stroke;stroke:rgba(8,18,28,.55);stroke-width:2.6px;stroke-linejoin:round}
 .sway{animation:sway 6s ease-in-out infinite;transform-origin:bottom center}
 @keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
 .add-seed{position:absolute;bottom:96px;right:18px;width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3;transition:transform .2s}
@@ -118,9 +134,9 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 /* ---------- nav ---------- */
 .nav{position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(250,247,238,.96);backdrop-filter:blur(8px);display:flex;border-top:1px solid #e6dec9;z-index:10}
 .nav button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:9.5px;color:#8c9aa8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-bottom:8px}
-.nav button .ico{font-size:20px;filter:grayscale(.7);opacity:.65;transition:all .25s}
+.nav button .ico{font-size:19px;width:42px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:13px;background:#efe7d4;box-shadow:0 2px 5px rgba(40,60,80,.2),inset 0 1px 0 rgba(255,255,255,.6);filter:grayscale(.5) drop-shadow(0 1px 1px rgba(0,0,0,.28));opacity:.78;transition:all .25s}
 .nav button.on{color:var(--leaf-dark);font-weight:700}
-.nav button.on .ico{filter:none;opacity:1;transform:translateY(-2px)}
+.nav button.on .ico{filter:none drop-shadow(0 2px 3px rgba(0,0,0,.25));opacity:1;background:linear-gradient(135deg,#e6f1dd,#cfe6c0);box-shadow:0 5px 12px rgba(74,124,89,.35),inset 0 1px 0 rgba(255,255,255,.7);transform:translateY(-3px)}
 
 /* ---------- path ---------- */
 .head{padding:50px 24px 18px;background:linear-gradient(180deg,#1d3450,#2a4a6b);color:#fff;position:relative}
@@ -249,7 +265,6 @@ input:focus,textarea:focus{border-color:var(--leaf)}
           <circle cx="88" cy="42" r="5.5" fill="#5c6b35"/>
         </svg>
       </div>
-      <div class="branch-hint">drag me to the dove ↗</div>
       <div class="breath"><span>🕊️</span></div>
       <h1>Olive</h1>
       <div class="tagline">"Extend the olive branch."</div>
@@ -510,6 +525,20 @@ input:focus,textarea:focus{border-color:var(--leaf)}
     <button data-nav="together"><span class="ico">🤝</span>Together</button>
   </div>
 
+  <!-- ================= FIRST-VISIT TUTORIAL ================= -->
+  <div id="tutorial">
+    <div id="tutScrim"></div>
+    <div id="tutHalo"></div>
+    <div id="tutCard">
+      <div id="tutCap"></div>
+      <div class="tut-dots" id="tutDots"></div>
+      <div class="tut-row">
+        <button id="tutSkip" onclick="endTutorial()">Skip</button>
+        <button id="tutNext" onclick="tutNext()">Next</button>
+      </div>
+    </div>
+  </div>
+
   <div id="btip"></div>
   <canvas id="fx" width="390" height="780"></canvas>
   <div id="toast" style="position:absolute;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#22303f;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;opacity:0;transition:all .4s;z-index:70;pointer-events:none;white-space:nowrap">.</div>
@@ -521,7 +550,7 @@ const SECTIONS=[
  {n:"Family",e:"🏡",g:"#4f7a4f",d:"a hearth that never goes cold"},
  {n:"Friends",e:"⛲",g:"#54855f",d:"a fountain in the square"},
  {n:"Work",e:"🏮",g:"#46705e",d:"a lamplit bench"},
- {n:"Life",e:"🪨",g:"#507a49",d:"a stone walkway"},
+ {n:"Life",e:"🧭",g:"#507a49",d:"a compass for the everyday"},
  {n:"Faith",e:"🕯️",g:"#5d6f8a",d:"a quiet chapel garden"},
  {n:"School",e:"🔔",g:"#5e8254",d:"an old bell and bookshelf"},
  {n:"Love",e:"❤️",g:"#7a5a62",d:"an arch of climbing roses"},
@@ -637,7 +666,7 @@ function finishOb(){
   show('garden');toast('Your first seed is planted 🌱')
 }
 /* a burst of stars + a forgiveness quote — at most once every 10s */
-let lastBurst=0;
+let burstBusy=false, doveArmed=true;
 function oliveBurst(cx,cy){
   const phone=document.getElementById('phone');
   const chars=['✨','⭐','🌟','✦','💫','🕊️'];
@@ -670,8 +699,10 @@ function oliveBurst(cx,cy){
     if(!dove)return;
     const a=br.getBoundingClientRect(), b=dove.getBoundingClientRect();
     const hit=!(a.right<b.left||a.left>b.right||a.bottom<b.top||a.top>b.bottom);
-    if(hit&&Date.now()-lastBurst>10000){
-      lastBurst=Date.now();
+    if(!hit){doveArmed=true;return;}            /* re-arm only after the branch leaves the dove */
+    if(doveArmed&&!burstBusy){
+      doveArmed=false;burstBusy=true;            /* locked for a full 10s, regardless of touches */
+      setTimeout(()=>{burstBusy=false},10000);
       const pr=document.getElementById('phone').getBoundingClientRect();
       oliveBurst((b.left+b.right)/2-pr.left,(b.top+b.bottom)/2-pr.top);
     }
@@ -698,7 +729,7 @@ function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.nav===id));
-  if(id==='garden')drawGarden();
+  if(id==='garden'){drawGarden();maybeTutorial();}
   if(id==='path')drawPath();
   if(id==='list')drawList();
   if(id==='vault')drawVault();
@@ -731,13 +762,17 @@ function drawGarden(){
     </g></g>`).join("");
   const trees=people.map((p,i)=>{
     counts[p.section]=(counts[p.section]||0);
-    const ang=p.section*45+SLOTS[counts[p.section]%SLOTS.length];
+    const slotIdx=counts[p.section]%SLOTS.length;
+    const ang=p.section*45+SLOTS[slotIdx];
     counts[p.section]++;
-    return `<g transform="rotate(${ang} ${CX} ${CY})"><g class="tree-g" data-i="${i}" transform="translate(${CX} ${CY-RR})">
+    /* alternate neighbours onto two rings + stagger label height so names never overlap or read together */
+    const ringOff=(slotIdx%2)*40;
+    const lblY=20+(slotIdx%2)*9;
+    return `<g transform="rotate(${ang} ${CX} ${CY})"><g class="tree-g" data-i="${i}" transform="translate(${CX} ${CY-RR+ringOff})">
       <circle cy="-26" r="30" fill="transparent"/>
       <g class="sway" style="animation-delay:${(i%7)*0.8}s"><g transform="scale(.8)">${treeArt(p.stage)}</g></g>
       ${p.stage===4?'<text y="-82" text-anchor="middle" font-size="13">🕊️</text>':''}
-      <text class="tree-label" y="20">${p.name}</text>
+      <text class="tree-label" y="${lblY}">${p.name}</text>
     </g></g>`;
   }).join("");
   svg.innerHTML=`<g id="rotG" transform="rotate(${rot} ${CX} ${CY})">
@@ -787,6 +822,50 @@ function goSection(k){
 })();
 function openTree(i){cur=i;show('treeView')}
 function openPerson(i){cur=i;show('path')}
+/* ============ first-visit garden tutorial ============ */
+function tutGrownIndex(){let bi=0,bs=-1;people.forEach((p,i)=>{if(p.stage>bs){bs=p.stage;bi=i}});return bi}
+function clearHalo(){const h=document.getElementById('tutHalo');if(h)h.style.display='none'}
+function highlightGrown(){
+  const i=tutGrownIndex();
+  goSection(people[i].section);
+  setTimeout(()=>{
+    const el=document.querySelector(`.tree-g[data-i="${i}"]`);
+    const h=document.getElementById('tutHalo');
+    if(!el||!h)return;
+    const pr=document.getElementById('phone').getBoundingClientRect();
+    const r=el.getBoundingClientRect();
+    h.style.left=(r.left+r.width/2-pr.left-52)+'px';
+    h.style.top=(r.top+r.height/2-pr.top-58)+'px';
+    h.style.display='block';
+  },1000);
+}
+const TUT=[
+ {cap:`<b>Welcome to your garden.</b><br>Everyone you choose to forgive takes root here — and grows as you do.`,act:clearHalo},
+ {cap:`Let the world turn. Each grove holds a different corner of your life — family, friends, the ones you've worked beside.`,act:()=>goSection(2)},
+ {cap:`Wander far enough and you reach the place where you lay your losses down. Even the sky learns to soften there.`,act:()=>goSection(7)},
+ {cap:`This tree has been tended. A seed becomes a sprout, a sprout a sapling — and one day it blooms, and a dove comes to rest in its branches.`,act:highlightGrown},
+ {cap:`Begin wherever your heart feels lightest. The garden is patient. It will wait for you.`,act:clearHalo}
+];
+let tutStep=0;
+function runTut(){
+  const t=TUT[tutStep];
+  document.getElementById('tutCap').innerHTML=t.cap;
+  document.getElementById('tutDots').innerHTML=TUT.map((_,k)=>`<i class="${k===tutStep?'on':''}"></i>`).join("");
+  document.getElementById('tutNext').textContent=tutStep===TUT.length-1?'Enter my garden ✨':'Next';
+  if(t.act)t.act();
+}
+function tutNext(){tutStep++;if(tutStep>=TUT.length){endTutorial();return}runTut()}
+function endTutorial(){
+  clearHalo();
+  document.getElementById('tutorial').classList.remove('on');
+  try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
+}
+function maybeTutorial(){
+  let seen=false;try{seen=localStorage.getItem('olive_tutorial_v1')}catch(e){}
+  if(seen)return;
+  tutStep=0;
+  setTimeout(()=>{document.getElementById('tutorial').classList.add('on');runTut()},700);
+}
 function addPerson(){
   const n=document.getElementById('addName').value.trim();
   if(!n)return;
