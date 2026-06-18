@@ -85,6 +85,12 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 .sec-jump{position:absolute;bottom:84px;left:70px;right:74px;display:flex;justify-content:center;gap:5px;z-index:3}
 .sec-jump button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);font-size:14px;cursor:pointer;transition:all .25s}
 .sec-jump button.on{background:rgba(232,200,120,.4);border-color:var(--gold);transform:translateY(-3px)}
+/* left/right section arrows */
+.gnav{position:absolute;top:46%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.34);border:1px solid rgba(232,200,120,.5);color:var(--gold);font-size:26px;line-height:0;font-weight:300;cursor:pointer;z-index:4;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:transform .15s,background .2s;-webkit-tap-highlight-color:transparent}
+.gnav:hover{background:rgba(0,0,0,.55)}
+.gnav:active{transform:translateY(-50%) scale(.88)}
+.gnav.left{left:14px;padding-right:3px}
+.gnav.right{right:14px;padding-left:3px}
 #dove{position:absolute;top:20%;left:-14%;font-size:25px;z-index:3;opacity:0;pointer-events:none;transform:scaleX(-1)}
 #dove.fly{animation:flyover 13s linear forwards}
 @keyframes flyover{0%{left:-12%;top:22%;opacity:0}6%{opacity:1}30%{top:15%}60%{top:19%}94%{opacity:1}100%{left:110%;top:13%;opacity:0}}
@@ -293,6 +299,8 @@ input:focus,textarea:focus{border-color:var(--leaf)}
         <div id="secLabel">🏡 Family</div>
       </div>
       <svg id="gardenSvg" viewBox="0 0 390 608" preserveAspectRatio="xMidYMax slice"></svg>
+      <button class="gnav left" onclick="stepSection(-1)" aria-label="Previous section">‹</button>
+      <button class="gnav right" onclick="stepSection(1)" aria-label="Next section">›</button>
       <div class="sec-jump" id="secJump"></div>
       <button class="tips-bulb" onclick="show('tips')" title="Tips">💡</button>
       <button class="add-seed" onclick="openModal('mAdd')" title="Plant a new seed">＋</button>
@@ -696,6 +704,8 @@ function goSection(k){
   while(t-rot>180)t-=360; while(t-rot<-180)t+=360;
   rotTarget=t;
 }
+function curSectionIdx(){const N=SECTIONS.length;return rotTarget!==null?(((Math.round(-rotTarget/45)%N)+N)%N):topSection()}
+function stepSection(d){const N=SECTIONS.length;goSection((curSectionIdx()+d+N)%N)}
 (function spin(){
   if(rotTarget!==null){
     rot+=(rotTarget-rot)*0.12;
