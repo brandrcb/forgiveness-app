@@ -55,6 +55,14 @@ input:focus,textarea:focus{border-color:var(--leaf)}
 @keyframes branchFloat{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(6deg) translateY(-7px)}}
 .branch-hint{position:absolute;top:calc(7% + 98px);left:6%;font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.08em;z-index:6;pointer-events:none}
 
+/* ---------- olive-branch → dove burst ---------- */
+.spark{position:absolute;z-index:66;pointer-events:none;will-change:transform,opacity;animation:sparkfly 1s ease-out forwards}
+@keyframes sparkfly{0%{transform:translate(0,0) scale(.3);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.05) rotate(var(--rot));opacity:0}}
+.forgive-quote{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.92);z-index:67;width:300px;max-width:84%;text-align:center;padding:24px 24px;border-radius:24px;background:rgba(15,27,45,.82);border:1px solid rgba(232,200,120,.5);backdrop-filter:blur(6px);opacity:0;transition:opacity .6s,transform .6s;pointer-events:none;box-shadow:0 22px 60px rgba(0,0,0,.55)}
+.forgive-quote.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.forgive-quote .fq{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.45;color:#fff}
+.forgive-quote .fa{margin-top:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
 /* section chips */
 .chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0}
 .chip{padding:7px 12px;border-radius:20px;border:1.5px solid #ddd3c0;background:#fff;color:#5b6b7a;font-size:12.5px;cursor:pointer;font-family:var(--sans);transition:all .2s}
@@ -241,7 +249,7 @@ input:focus,textarea:focus{border-color:var(--leaf)}
           <circle cx="88" cy="42" r="5.5" fill="#5c6b35"/>
         </svg>
       </div>
-      <div class="branch-hint">drag me ↷</div>
+      <div class="branch-hint">drag me to the dove ↗</div>
       <div class="breath"><span>🕊️</span></div>
       <h1>Olive</h1>
       <div class="tagline">"Extend the olive branch."</div>
@@ -587,6 +595,25 @@ let people=[
 let cur=1, willSel=3, unlocked=[0,1,2], pending=null, checkSel=null, lastScreen='garden';
 let obSection=0, addSection=0, qaSection=0;
 
+/* ============ saved progress (per device/browser) ============ */
+const SAVE_KEY='olive_save_v1';
+function save(){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({people,unlocked,onboarded:true}))}catch(e){}
+}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');
+    if(d&&Array.isArray(d.people)&&d.people.length){
+      people=d.people;
+      unlocked=Array.isArray(d.unlocked)?d.unlocked:[0,1,2];
+      return !!d.onboarded;
+    }
+  }catch(e){}
+  return false;
+}
+/* lets a tester start over from the browser console: oliveReset() */
+window.oliveReset=function(){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()};
+
 /* ============ section chips ============ */
 function chipRow(elId,onPick,getSel){
   document.getElementById(elId).innerHTML=SECTIONS.map((s,i)=>
@@ -604,14 +631,51 @@ function finishOb(){
   const n=document.getElementById('obName').value.trim();
   const h=document.getElementById('obHurt').value.trim();
   if(n){people.unshift(mk(n,obSection,1,[],[],h));people[0].will=willSel;cur=0}
+  save();
   document.getElementById('onboard').classList.remove('active');
   document.getElementById('mainNav').style.display='flex';
   show('garden');toast('Your first seed is planted 🌱')
 }
-/* draggable olive branch */
+/* a burst of stars + a forgiveness quote — at most once every 10s */
+let lastBurst=0;
+function oliveBurst(cx,cy){
+  const phone=document.getElementById('phone');
+  const chars=['✨','⭐','🌟','✦','💫','🕊️'];
+  for(let i=0;i<28;i++){
+    const s=document.createElement('div');s.className='spark';
+    s.textContent=chars[i%chars.length];
+    const ang=Math.random()*Math.PI*2, dist=55+Math.random()*165;
+    s.style.left=cx+'px';s.style.top=cy+'px';
+    s.style.fontSize=(12+Math.random()*16)+'px';
+    s.style.setProperty('--dx',(Math.cos(ang)*dist).toFixed(1)+'px');
+    s.style.setProperty('--dy',(Math.sin(ang)*dist).toFixed(1)+'px');
+    s.style.setProperty('--rot',(Math.random()*320-160).toFixed(0)+'deg');
+    s.style.animationDelay=(Math.random()*.12).toFixed(2)+'s';
+    phone.appendChild(s);setTimeout(()=>s.remove(),1200);
+  }
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  const card=document.createElement('div');card.className='forgive-quote';
+  card.innerHTML=`<div class="fq">“${q[0]}”</div><div class="fa">— ${q[1]}</div>`;
+  phone.appendChild(card);
+  requestAnimationFrame(()=>card.classList.add('show'));
+  setTimeout(()=>{card.classList.remove('show');setTimeout(()=>card.remove(),700)},4600);
+}
+
+/* draggable olive branch — meet it with the dove to bloom a blessing */
 (function(){
   const br=document.getElementById('branch');
   let drag=false,ox=0,oy=0;
+  function checkDoveHit(){
+    const dove=document.querySelector('#onboard .breath');
+    if(!dove)return;
+    const a=br.getBoundingClientRect(), b=dove.getBoundingClientRect();
+    const hit=!(a.right<b.left||a.left>b.right||a.bottom<b.top||a.top>b.bottom);
+    if(hit&&Date.now()-lastBurst>10000){
+      lastBurst=Date.now();
+      const pr=document.getElementById('phone').getBoundingClientRect();
+      oliveBurst((b.left+b.right)/2-pr.left,(b.top+b.bottom)/2-pr.top);
+    }
+  }
   br.addEventListener('pointerdown',e=>{
     drag=true;br.style.animation='none';
     const r=br.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
@@ -622,8 +686,9 @@ function finishOb(){
     const pr=document.getElementById('phone').getBoundingClientRect();
     br.style.left=Math.max(-30,Math.min(pr.width-80,e.clientX-pr.left-ox))+'px';
     br.style.top=Math.max(-20,Math.min(pr.height-70,e.clientY-pr.top-oy))+'px';
+    checkDoveHit();
   });
-  br.addEventListener('pointerup',()=>{drag=false;br.style.animation=''});
+  br.addEventListener('pointerup',()=>{drag=false;br.style.animation='';checkDoveHit()});
 })();
 
 /* ============ nav ============ */
@@ -727,6 +792,7 @@ function addPerson(){
   if(!n)return;
   people.push(mk(n,addSection,1,[],[]));
   document.getElementById('addName').value='';
+  save();
   closeModals();goSection(addSection);drawGarden();toast(`A seed for ${n} 🌱`)
 }
 /* dove flyover — rare (every 5 minutes) */
@@ -847,6 +913,7 @@ function completeStep(i){
     p.done.push(i);
     const req=p.done.filter(d=>!STEPS[d].opt).length;
     p.stage=req>=5?4:req>=3?3:req>=1?2:1;
+    save();
     pending=i;
     openCheckin(i); /* willingness check between every step */
   }else drawPath();
@@ -881,6 +948,7 @@ function afterCheckin(){
     if(!unlocked.includes(qi))unlocked.push(qi);
     showUnlock(pending,qi);pending=null;
   }
+  save();
   drawPath();
 }
 
@@ -890,6 +958,7 @@ function quickAdd(){
   if(!n)return;
   people.push(mk(n,qaSection,1,[],[]));
   document.getElementById('qaName').value='';
+  save();
   drawList();toast(`${n} added — a seed is planted 🌱`)
 }
 function drawList(){
@@ -937,6 +1006,14 @@ function closeModals(){document.querySelectorAll('.modal').forEach(m=>m.classLis
 document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModals()}));
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity=1;t.style.transform='translateX(-50%) translateY(0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translateX(-50%) translateY(20px)'},2600)}
 for(let i=0;i<7;i++){const f=document.createElement('div');f.className='firefly';f.style.left=(10+Math.random()*80)+'%';f.style.bottom=(15+Math.random()*30)+'%';f.style.animationDelay=Math.random()*6+'s';document.querySelector('#garden .sky').appendChild(f)}
+
+/* restore saved progress — skip onboarding if the tester has been here before */
+if(load()){
+  cur=0;
+  document.getElementById('onboard').classList.remove('active');
+  document.getElementById('mainNav').style.display='flex';
+  show('garden');
+}
 drawGarden();
 
 /* ============ interactive star field (every screen) ============ */
