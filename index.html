@@ -919,6 +919,8 @@ function maybeTutorial(){
   if(tutActive)return;
   let seen=false;try{seen=localStorage.getItem('olive_tutorial_v1')}catch(e){}
   if(seen)return;
+  // mark seen the moment it first appears, so abandoning it (nav away / reload) won't bring it back
+  try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
   tutActive=true;tutStep=0;
   setTimeout(()=>{document.getElementById('tutorial').classList.add('on');runTut()},700);
 }
