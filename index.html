@@ -888,7 +888,7 @@ function stepSection(d){const N=SECTIONS.length;goSection((curSectionIdx()+d+N)%
 function openTree(i){cur=i;show('treeView')}
 function openPerson(i){cur=i;show('path')}
 /* ============ first-visit garden tutorial (spotlight + real zoom) ============ */
-let tutActive=false, tutStep=0;
+let tutActive=false, tutStep=0, tutSeen=false; /* tutSeen: in-memory guard in case localStorage is blocked (iOS private mode / webviews) */
 function tutGrownIndex(){let bi=0,bs=-1;people.forEach((p,i)=>{if(p.stage>bs){bs=p.stage;bi=i}});return bi}
 function clearHalo(){const h=document.getElementById('tutHalo');if(h)h.style.display='none'}
 function tutToGarden(){if(document.querySelector('.screen.active').id!=='garden')show('garden');clearHalo()}
@@ -909,6 +909,7 @@ function runTut(){
 }
 function tutNext(){tutStep++;if(tutStep>=TUT.length){endTutorial();return}runTut()}
 function endTutorial(){
+  tutSeen=true;
   try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
   clearHalo();
   document.getElementById('tutorial').classList.remove('on');
@@ -916,10 +917,12 @@ function endTutorial(){
   tutActive=false;
 }
 function maybeTutorial(){
-  if(tutActive)return;
+  if(tutActive||tutSeen)return;
   let seen=false;try{seen=localStorage.getItem('olive_tutorial_v1')}catch(e){}
   if(seen)return;
-  // mark seen the moment it first appears, so abandoning it (nav away / reload) won't bring it back
+  // mark seen the moment it first appears, so abandoning it (nav away / reload) won't bring it back.
+  // tutSeen guarantees once-per-session even if localStorage is blocked (iOS private mode / in-app webviews).
+  tutSeen=true;
   try{localStorage.setItem('olive_tutorial_v1','1')}catch(e){}
   tutActive=true;tutStep=0;
   setTimeout(()=>{document.getElementById('tutorial').classList.add('on');runTut()},700);
